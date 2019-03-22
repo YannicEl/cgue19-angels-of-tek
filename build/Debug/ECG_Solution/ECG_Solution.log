@@ -1,2 +1,3 @@
 ﻿  Main.cpp
-  ECG_Solution.vcxproj -> C:\Users\bamio\OneDrive\TU\SS 19\CG\ECG Framework\bin\Debug\ECG_Solution.exe
+c:\users\bamio\git\cgue19-angels-of-tek\ecg_solution\src\main.cpp(153): warning C4305: "Initialisierung": Verkürzung von "double" in "float"
+  ECG_Solution.vcxproj -> C:\Users\bamio\Git\cgue19-angels-of-tek\bin\Debug\ECG_Solution.exe

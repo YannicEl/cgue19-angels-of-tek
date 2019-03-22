@@ -129,7 +129,7 @@ int main(int argc, char** argv)
 	glfwSetScrollCallback(window, scroll_callback);
 
 	// set GL defaults
-	glClearColor(1, 1, 1, 1);
+	glClearColor(0, 0, 0, 0);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
@@ -150,9 +150,15 @@ int main(int argc, char** argv)
 		std::shared_ptr<Material> brickTextureMaterial = std::make_shared<TextureMaterial>(textureShader, glm::vec3(0.1f, 0.7f, 0.3f), 8.0f, brickTexture);
 
 		// Create geometry
-		Geometry cube = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 1.5f, 0.0f)), Geometry::createCubeGeometry(1.5f, 1.5f, 1.5f), woodTextureMaterial);
-		Geometry cylinder = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, -1.0f, 0.0f)), Geometry::createCylinderGeometry(32, 1.3f, 1.0f), brickTextureMaterial);
-		Geometry sphere = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, -1.0f, 0.0f)), Geometry::createSphereGeometry(64, 32, 1.0f), brickTextureMaterial);
+		float a = 0.2;
+		float l = 1000.0;
+
+		Geometry lane1 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, 0.0f, -(l / 2 - 5))), Geometry::createCubeGeometry(a, a, l), woodTextureMaterial);
+		Geometry lane2 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, 0.0f, -(l / 2 - 5))), Geometry::createCubeGeometry(a, a, l), woodTextureMaterial);
+		Geometry lane3 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -(l / 2 - 5))), Geometry::createCubeGeometry(a, a, l), woodTextureMaterial);
+		Geometry lane4 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, -(l / 2 - 5))), Geometry::createCubeGeometry(a, a, l), woodTextureMaterial);
+		Geometry lane5 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, -(l / 2 - 5))), Geometry::createCubeGeometry(a, a, l), woodTextureMaterial);
+
 
 		// Initialize camera
 		Camera camera(fov, float(window_width) / float(window_height), nearZ, farZ);
@@ -167,6 +173,8 @@ int main(int argc, char** argv)
 		float t_sum = 0.0f;
 		float secCounter = 0.0f;
 		double mouse_x, mouse_y;
+
+		camera.update(10, 100, _zoom, true, _strafing);
 
 
 		while (!glfwWindowShouldClose(window)) {
@@ -184,9 +192,11 @@ int main(int argc, char** argv)
 			setPerFrameUniforms(textureShader.get(), camera, dirL, pointL);
 
 			// Render
-			cube.draw();
-			cylinder.draw();
-			sphere.draw();
+			lane1.draw();
+			lane2.draw();
+			lane3.draw();
+			lane4.draw();
+			lane5.draw();
 
 			// Compute frame time
 			dt = t;

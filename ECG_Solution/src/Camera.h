@@ -50,7 +50,7 @@ public:
 	/*!
 	 * Updates the camera's position and view matrix according to the input
 	 * @param x: current mouse x position
-	 * @param y: current mouse x position
+	 * @param y: current mouse y position
 	 * @param zoom: zoom multiplier
 	 * @param dragging: is the cammera dragging
 	 * @param strafing: is the cammera strafing
