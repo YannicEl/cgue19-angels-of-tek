@@ -346,3 +346,11 @@ healthchecksdb
 
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
+bin/Debug/ECG_Solution.exe
+bin/Debug/ECG_Solution.ilk
+bin/Debug/ECG_Solution.pdb
+build/Debug/ECG_Solution/ECG_Solution.log
+build/Debug/ECG_Solution/ECG_Solution.tlog/link.read.1.tlog
+build/Debug/ECG_Solution/Main.obj
+build/Debug/ECG_Solution/vc141.idb
+build/Debug/ECG_Solution/vc141.pdb
