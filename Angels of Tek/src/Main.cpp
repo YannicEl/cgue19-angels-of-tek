@@ -100,7 +100,7 @@ int main()
 	Shader lightingShader("lighting.vert", "lighting.frag");
 	Shader lampShader("lamp.vert", "lamp.frag");
 
-	// load models 
+	// load models
 	// -----------
 	Model ourModel("assets/models/nanosuit/nanosuit.obj");
 
