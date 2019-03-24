@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <irrklang/irrKlang.h>
 
 // prototypes
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -47,6 +48,10 @@ glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 int main()
 {
+	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
+	engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
+
+
 	// glfw: initialize and configure
 	// ------------------------------
 	glfwInit();
