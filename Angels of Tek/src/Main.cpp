@@ -6,9 +6,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <../../../Angels of Tek/src/Shader.h>
-#include <../../../Angels of Tek/src/Camera.h>
-#include <../../../Angels of Tek/src/Model.h>
+#include <Utils/Shader.h>
+#include <Utils/Camera.h>
+#include <Utils/Model.h>
 
 #include <iostream>
 #include <sstream>

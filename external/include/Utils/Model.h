@@ -10,8 +10,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <../../../Angels of Tek/src/Mesh.h>
-#include <../../../Angels of Tek/src/Shader.h>
+#include <Utils/Mesh.h>
+#include <Utils/Shader.h>
 
 #include <string>
 #include <fstream>

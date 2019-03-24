@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <../../../Angels of Tek/src/Shader.h>
+#include <Utils/Shader.h>
 
 #include <string>
 #include <fstream>
