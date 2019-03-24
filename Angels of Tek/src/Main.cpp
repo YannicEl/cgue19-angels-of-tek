@@ -8,6 +8,7 @@
 
 #include <../../../Angels of Tek/src/Shader.h>
 #include <../../../Angels of Tek/src/Camera.h>
+#include <../../../Angels of Tek/src/Model.h>
 
 #include <iostream>
 #include <sstream>
@@ -99,7 +100,10 @@ int main()
 	Shader lightingShader("lighting.vert", "lighting.frag");
 	Shader lampShader("lamp.vert", "lamp.frag");
 
-	
+	// load models
+	// -----------
+	Model ourModel("assets/models/nanosuit.obj");
+
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
 	float vertices[] = {
@@ -315,6 +319,12 @@ int main()
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
+
+		// render the loaded model
+		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.7f)); // translate it down so it's at the center of the scene
+		model = glm::scale(model, glm::vec3(0.18f, 0.18f, 0.18f));	// it's a bit too big for our scene, so scale it down
+		lightingShader.setMat4("model", model);
+		ourModel.Draw(lightingShader);
 
 		// also draw the lamp object(s)
 		lampShader.use();
