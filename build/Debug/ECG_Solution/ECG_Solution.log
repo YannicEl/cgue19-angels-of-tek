@@ -1,3 +1,10 @@
 ﻿  Main.cpp
-c:\users\bamio\git\cgue19-angels-of-tek\ecg_solution\src\main.cpp(153): warning C4305: "Initialisierung": Verkürzung von "double" in "float"
+c:\users\bamio\git\cgue19-angels-of-tek\ecg_solution\src\main.cpp(257): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+c:\users\bamio\git\cgue19-angels-of-tek\ecg_solution\src\main.cpp(323): warning C4244: "Argument": Konvertierung von "double" in "float", möglicher Datenverlust
+c:\users\bamio\git\cgue19-angels-of-tek\ecg_solution\src\main.cpp(330): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+c:\users\bamio\git\cgue19-angels-of-tek\ecg_solution\src\main.cpp(331): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+c:\users\bamio\git\cgue19-angels-of-tek\ecg_solution\src\main.cpp(335): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+c:\users\bamio\git\cgue19-angels-of-tek\ecg_solution\src\main.cpp(336): warning C4244: "Initialisierung": Konvertierung von "double" in "float", möglicher Datenverlust
+c:\users\bamio\git\cgue19-angels-of-tek\ecg_solution\src\main.cpp(338): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
+c:\users\bamio\git\cgue19-angels-of-tek\ecg_solution\src\main.cpp(339): warning C4244: "=": Konvertierung von "double" in "float", möglicher Datenverlust
   ECG_Solution.vcxproj -> C:\Users\bamio\Git\cgue19-angels-of-tek\bin\Debug\ECG_Solution.exe
