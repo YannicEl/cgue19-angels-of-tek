@@ -102,7 +102,7 @@ int main()
 
 	// load models
 	// -----------
-	Model ourModel("assets/models/nanosuit.obj");
+	Model ourModel("assets/models/nanosuit/nanosuit.obj");
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
