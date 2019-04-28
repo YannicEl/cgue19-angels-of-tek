@@ -13,6 +13,7 @@
 #include <iostream>
 #include <sstream>
 #include <irrklang/irrKlang.h>
+#include <Windows.h>
 
 // prototypes
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -49,7 +50,7 @@ glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 int main()
 {
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
-	engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
+	//engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
 
 
 	// glfw: initialize and configure
@@ -107,7 +108,10 @@ int main()
 
 	// load models
 	// -----------
-	Model ourModel("assets/models/nanosuit/nanosuit.obj");
+	//Model ourModel("assets/models/nanosuit/nanosuit.obj");
+	//Model ourModel("assets/models/IronMan/IronMan.obj");
+	//Model ourModel("assets/models/bugatti/bugatti.obj");
+	//Model ourModel("assets/models/dennis/rp_dennis_posed_004_30k_native.obj");
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
@@ -324,12 +328,6 @@ int main()
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
-
-		// render the loaded model
-		model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.7f)); // translate it down so it's at the center of the scene
-		model = glm::scale(model, glm::vec3(0.18f, 0.18f, 0.18f));	// it's a bit too big for our scene, so scale it down
-		lightingShader.setMat4("model", model);
-		ourModel.Draw(lightingShader);
 
 		// also draw the lamp object(s)
 		lampShader.use();
