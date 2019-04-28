@@ -9,7 +9,6 @@
 #include <Utils/Shader.h>
 #include <Utils/Camera.h>
 #include <Utils/Model.h>
-#include <Utils/Geometry.h>
 
 #include <iostream>
 #include <sstream>
@@ -23,7 +22,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 unsigned int loadTexture(const char *path);
-void setPerFrameUniforms(Shader* shader, Camera& camera/*, DirectionalLight& dirL, PointLight& pointL*/);
 
 static void APIENTRY DebugCallbackDefault(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const GLvoid* userParam);
 static std::string FormatDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, const char* msg);
@@ -107,9 +105,6 @@ int main()
 	//Shader ourShader("texture.vert", "texture.frag");
 	Shader lightingShader("lighting.vert", "lighting.frag");
 	Shader lampShader("lamp.vert", "lamp.frag");
-
-	/*std::shared_ptr<Shader> lightingShader = std::make_shared<Shader>("lighting.vert", "lighting.frag");
-	std::shared_ptr<Shader> lampShader = std::make_shared<Shader>("lamp.vert", "lamp.frag");*/
 
 	// load models
 	// -----------
@@ -242,6 +237,7 @@ int main()
 
 		// be sure to activate shader when setting uniforms/drawing objects
 		lightingShader.use();
+		lightingShader.setVec3("viewPos", camera.Position);
 		lightingShader.setFloat("material.shininess", 32.0f);
 
 		/*
@@ -299,13 +295,16 @@ int main()
 		lightingShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
 		lightingShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 
-		
-		
-		
-		// view/projection transformations
-		setPerFrameUniforms(&lightingShader, camera);
+		// material properties
+		lightingShader.setFloat("material.shininess", 64.0f);
 
-		// initialize model matrix with defaults
+		// view/projection transformations
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+		lightingShader.setMat4("projection", projection);
+		lightingShader.setMat4("view", view);
+
+		// world transformation
 		glm::mat4 model = glm::mat4(1.0f);
 		lightingShader.setMat4("model", model);
 
@@ -330,13 +329,10 @@ int main()
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 
-
-
-
-
-
 		// also draw the lamp object(s)
-		setPerFrameUniforms(&lampShader, camera);
+		lampShader.use();
+		lampShader.setMat4("projection", projection);
+		lampShader.setMat4("view", view);
 
 		// we now draw as many light bulbs as we have point lights.
 		glBindVertexArray(lightVAO);
@@ -365,21 +361,6 @@ int main()
 	// ------------------------------------------------------------------
 	glfwTerminate();
 	return 0;
-}
-
-void setPerFrameUniforms(Shader* shader, Camera& camera/*, DirectionalLight& dirL, PointLight& pointL*/)
-{
-	shader->use();
-	shader->setMat4("projection", glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f));
-	shader->setMat4("view", camera.GetViewMatrix());
-	shader->setVec3("viewPos", camera.Position);
-	
-
-	/*shader->setUniform("dirL.color", dirL.color);
-	shader->setUniform("dirL.direction", dirL.direction);
-	shader->setUniform("pointL.color", pointL.color);
-	shader->setUniform("pointL.position", pointL.position);
-	shader->setUniform("pointL.attenuation", pointL.attenuation);*/
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
