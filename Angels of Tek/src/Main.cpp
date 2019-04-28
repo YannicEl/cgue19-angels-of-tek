@@ -46,9 +46,6 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-// lighting
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
-
 int main()
 {
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
@@ -108,15 +105,16 @@ int main()
 	Shader lightingShader("lighting.vert", "lighting.frag");
 	Shader lampShader("lamp.vert", "lamp.frag");
 
-	/*std::shared_ptr<Shader> lightingShader = std::make_shared<Shader>("lighting.vert", "lighting.frag");
-	std::shared_ptr<Shader> lampShader = std::make_shared<Shader>("lamp.vert", "lamp.frag");*/
-
 	// load models
 	// -----------
 	//Model ourModel("assets/models/nanosuit/nanosuit.obj");
 	//Model ourModel("assets/models/IronMan/IronMan.obj");
 	//Model ourModel("assets/models/bugatti/bugatti.obj");
 	//Model ourModel("assets/models/dennis/rp_dennis_posed_004_30k_native.obj");
+
+	// EXPERIMENTAL SIMON CUBEZ
+	Material cubePhongMaterial(&lightingShader, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.1f, 0.7f, 0.1f), 2.0f);
+	Geometry cubePhong = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 1.5f, 0.0f)), Geometry::createCubeGeometry(1.5f, 1.5f, 1.5f), &cubePhongMaterial);
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
@@ -234,6 +232,9 @@ int main()
 		// input
 		// -----
 		glfwPollEvents();
+
+		// RENDER ME
+		cubePhong.draw();
 
 		// render
 		// ------

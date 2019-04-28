@@ -41,7 +41,7 @@ public:
 	 * @param materialCoefficients: The material's coefficients (x = ambient, y = diffuse, z = specular)
 	 * @param alpha: Alpha value, i.e. the shininess constant
 	 */
-	Material(std::shared_ptr<Shader> shader, glm::vec3 color, glm::vec3 materialCoefficients, float alpha);
+	Material(Shader* shadershader, glm::vec3 color, glm::vec3 materialCoefficients, float alpha);
 
 	virtual ~Material();
 
@@ -60,7 +60,7 @@ public:
 // Base material
 /* --------------------------------------------- */
 
-Material::Material(std::shared_ptr<Shader> shader, glm::vec3 color, glm::vec3 materialCoefficients, float alpha)
+Material::Material(Shader* shader, glm::vec3 color, glm::vec3 materialCoefficients, float alpha)
 	: _shader(shader), _color(color), _materialCoefficients(materialCoefficients), _alpha(alpha)
 {
 }
