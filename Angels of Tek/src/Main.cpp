@@ -9,6 +9,7 @@
 #include <Utils/Shader.h>
 #include <Utils/Camera.h>
 #include <Utils/Model.h>
+#include <Utils/Geometry.h>
 
 #include <iostream>
 #include <sstream>
