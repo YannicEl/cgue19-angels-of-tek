@@ -76,7 +76,7 @@ Shader* Material::getShader()
 
 void Material::setUniforms()
 {
-	_shader->setVec3("ourColor", _color);
+	_shader->setVec4("ourColor", glm::vec4(_color, 1.0f));
 	//_shader->setVec3("diffuseColor", _color);
 	//_shader->setVec3("materialCoefficients", _materialCoefficients);
 	//_shader->setFloat("specularAlpha", _alpha);
