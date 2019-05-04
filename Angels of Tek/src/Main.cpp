@@ -9,6 +9,7 @@
 #include <Utils/Shader.h>
 #include <Utils/Camera.h>
 #include <Utils/Model.h>
+#include <Utils/Geometry.h>
 #include <Utils/Level.h>
 
 #include <iostream>
@@ -241,10 +242,11 @@ int main()
 			break;
 		}
 
-		if (level.collision(camera))
+		if (level.collision(camera)){
 			std::cout << "Lose" << std::endl;
 			glfwSetWindowTitle(window, "Lose");
 			break;
+		}
 			
 
 		// input

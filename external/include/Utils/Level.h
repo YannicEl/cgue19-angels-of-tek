@@ -10,7 +10,7 @@ class Level
 public:
 	Level(string wtf) {};
 
-	//glm::vec4* getLevels() {
+	//glm::vec4* getlevels() {
 	//	glm::vec4 level[] = {
 	//		glm::vec4(1,  -5,  1, 4),
 	//	};
