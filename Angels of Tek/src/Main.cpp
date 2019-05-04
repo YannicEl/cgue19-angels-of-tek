@@ -103,6 +103,7 @@ int main()
 
 	// SIMON SHADER
 	Shader basicShader("basic.vert", "basic.frag");
+	Shader basicShader2("basic.vert", "basic.frag");
 
 
 	// load models
@@ -113,13 +114,17 @@ int main()
 	//Model ourModel("assets/models/dennis/rp_dennis_posed_004_30k_native.obj");
 
 	// EXPERIMENTAL SIMON CUBEZ
-	Material cubePhongMaterial(&basicShader, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.1f, 0.7f, 0.1f), 2.0f);
+	Material cubePhongMaterial(&basicShader, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
 	Geometry cubePhong = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)), Geometry::createCubeGeometry(1.5f, 1.5f, 1.5f), &cubePhongMaterial);
+	Material cubePhongMaterial2(&basicShader, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
+	Geometry cubePhong2 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 0.0f)), Geometry::createCubeGeometry(1.0f, 1.5f, 0.5f), &cubePhongMaterial2);
 
 	//// load textures (we now use a utility function to keep the code more organized)
 	//// -----------------------------------------------------------------------------
-	//unsigned int diffuseMap = loadTexture("assets/textures/container2.png");
 	//unsigned int specularMap = loadTexture("assets/textures/container2_specular.png");
+
+	GLuint containerTextureID = loadTexture("assets/textures/container.jpg");
+	GLuint containerTextureID2 = loadTexture("assets/textures/container2.png");
 
 	// render loop
 	// -----------
@@ -158,10 +163,15 @@ int main()
 		glClearColor(1, 1, 1, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		setPerFrameUniforms(&basicShader, camera);
+		// BIND ME
+		glBindTexture(GL_TEXTURE_2D, containerTextureID);
 
 		// RENDER ME
+		setPerFrameUniforms(&basicShader, camera);
 		cubePhong.draw();
+
+		glBindTexture(GL_TEXTURE_2D, containerTextureID2);
+		cubePhong2.draw();
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
@@ -178,8 +188,8 @@ int main()
 void setPerFrameUniforms(Shader* shader, Camera& camera/*, DirectionalLight& dirL, PointLight& pointL*/)
 {
 	shader->use();
-	shader->setMat4("projection", glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f));
-	shader->setMat4("view", camera.GetViewMatrix());
+	shader->setMat4("viewProjMatrix", glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f) * camera.GetViewMatrix());
+	shader->setVec3("cameraWorldPosition", camera.Position);
 	//shader->setVec3("viewPos", camera.Position);
 	
 
@@ -268,7 +278,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 // ---------------------------------------------------
 unsigned int loadTexture(char const * path)
 {
-	unsigned int textureID;
+	GLuint textureID;
 	glGenTextures(1, &textureID);
 
 	int width, height, nrComponents;
@@ -287,10 +297,10 @@ unsigned int loadTexture(char const * path)
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 		stbi_image_free(data);
 	}
