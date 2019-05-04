@@ -79,7 +79,7 @@ public:
 		//float velocity = MovementSpeed * deltaTime;
 		float velocity = 2;
 		if (direction == FORWARD) {
-			Position += Front * MovementSpeed * deltaTime;
+			Position -= Front * MovementSpeed * deltaTime;
 		}
 		//if (direction == BACKWARD)
 		//	Position -= Front * velocity;
