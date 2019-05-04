@@ -1,21 +1,16 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
-const glm::vec4 level1[] = {
-	glm::vec4(1,  -5,  1, 4),
-};
-
 class Level
 {
-public:
-	Level(string wtf) {};
 
-	//glm::vec4* getlevels() {
-	//	glm::vec4 level[] = {
-	//		glm::vec4(1,  -5,  1, 4),
-	//	};
-	//	return level;
-	//}
+public:
+
+	const glm::vec4 level1[6] = {
+		glm::vec4(1,  -5,  1, 4),
+	};
+
+	Level(string wtf) {};
 
 	bool collision(Camera camera) {
 		glm::vec4 obstacle = level1[0];
