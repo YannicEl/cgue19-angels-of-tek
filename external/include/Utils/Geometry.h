@@ -186,9 +186,9 @@ void Geometry::draw()
 	Shader* shader = _material->getShader();
 	shader->use();
 
-	shader->setMat4("modelMatrix", _modelMatrix);
-	shader->setMat3("normalMatrix", glm::mat3(glm::transpose(glm::inverse(_modelMatrix))));
+	shader->setMat4("model", _modelMatrix);
 	_material->setUniforms();
+	//shader->setMat3("normalMatrix", glm::mat3(glm::transpose(glm::inverse(_modelMatrix))));
 
 	glBindVertexArray(_vao);
 	glDrawElements(GL_TRIANGLES, _elements, GL_UNSIGNED_INT, 0);
