@@ -83,7 +83,7 @@ public:
 	 * @param data: data for the geometry object
 	 * @param material: material of the geometry object
 	 */
-	Geometry(glm::mat4 modelMatrix, GeometryData& data, std::shared_ptr<Material> material);
+	Geometry(glm::mat4 modelMatrix, GeometryData& data, Material* material);
 	~Geometry();
 
 	/*!
@@ -129,7 +129,7 @@ public:
 	static GeometryData createSphereGeometry(unsigned int longitudeSegments, unsigned int latitudeSegments, float radius);
 };
 
-Geometry::Geometry(glm::mat4 modelMatrix, GeometryData& data, std::shared_ptr<Material> material)
+Geometry::Geometry(glm::mat4 modelMatrix, GeometryData& data, Material* material)
 	: _elements(data.indices.size()), _modelMatrix(modelMatrix), _material(material)
 {
 	// create VAO
