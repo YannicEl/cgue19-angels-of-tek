@@ -51,6 +51,8 @@ float lastFrame = 0.0f;
 
 int main()
 {
+	std::cout << level.level1[0].x << std::endl;
+
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
 	//engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
 
