@@ -1,4 +1,4 @@
-#include <glad/glad.h>
+﻿#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
 
@@ -9,12 +9,12 @@
 #include <Utils/Shader.h>
 #include <Utils/Camera.h>
 #include <Utils/Model.h>
-#include <Utils/Geometry.h>
+#include <Utils/Level.h>
 
 #include <iostream>
 #include <sstream>
 #include <irrklang/irrKlang.h>
-#include <Windows.h>
+
 
 // prototypes
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
@@ -30,6 +30,8 @@ static std::string FormatDebugOutput(GLenum source, GLenum type, GLuint id, GLen
 // globals
 static bool _wireframe = false;
 static bool _culling = true;
+int score = 0;
+Level level("😡");
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -97,7 +99,7 @@ int main()
 
 	// configure camera settings
 	// -----------------------------
-	camera.MovementSpeed = 20.0f;
+	camera.MovementSpeed = 1.0f;
 	camera.MouseSensitivity = 1.5f;
 
 
@@ -226,6 +228,22 @@ int main()
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
+		camera.ProcessKeyboard(FORWARD, deltaTime);
+
+		//std::cout << camera.Position.z << std::endl;
+
+		// Collision / win condition
+		if (camera.Position.z < -10) {
+			std::cout << "Win" << std::endl;
+			glfwSetWindowTitle(window, "Win");
+			break;
+		}
+
+		if (level.collision(camera))
+			std::cout << "Lose" << std::endl;
+			glfwSetWindowTitle(window, "Lose");
+			break;
+			
 
 		// input
 		// -----
@@ -249,7 +267,7 @@ int main()
 		*/
 		// directional light
 		lightingShader.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-		lightingShader.setVec3("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+		lightingShader.setVec3("dirlight.ambient", 0.05f, 0.05f, 0.05f);
 		lightingShader.setVec3("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
 		lightingShader.setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
 		// point light 1
@@ -398,7 +416,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	// F2 - Culling
 	// Esc - Exit
 
-	if (action != GLFW_RELEASE) return;
+	if (action != GLFW_PRESS) return;
 
 	switch (key)
 	{
