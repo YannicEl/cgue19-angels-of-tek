@@ -51,8 +51,6 @@ float lastFrame = 0.0f;
 
 int main()
 {
-	std::cout << level.level1[0].x << std::endl;
-
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
 	//engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
 
@@ -100,7 +98,7 @@ int main()
 
 	// configure camera settings
 	// -----------------------------
-	camera.MovementSpeed = 1.0f;
+	camera.MovementSpeed = 3.0f;
 	camera.MouseSensitivity = 1.5f;
 
 	// SIMON SHADER
@@ -120,6 +118,17 @@ int main()
 	Geometry cubePhong = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)), Geometry::createCubeGeometry(1.5f, 1.5f, 1.5f), &cubePhongMaterial);
 	Material cubePhongMaterial2(&basicShader, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
 	Geometry cubePhong2 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 0.0f)), Geometry::createCubeGeometry(1.0f, 1.5f, 0.5f), &cubePhongMaterial2);
+
+	vector<Geometry> testicles;
+
+	for (int i = 0; i < level.level1.size(); i++)
+	{
+		glm::vec4 pos = level.level1.at(i);
+		testicles.push_back(Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(pos.x, 0.0f, pos.y)), Geometry::createCubeGeometry(1.0f, 1.0f, 1.0f), &cubePhongMaterial));
+	}
+
+	Geometry WtfOhneDemCubeGehtDasProgrammNichtKannstDuMirDasErklärenSiomonWesp (Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 0.0f)), Geometry::createCubeGeometry(0.5f, 0.5f, 0.5f), &cubePhongMaterial));
+
 
 	//// load textures (we now use a utility function to keep the code more organized)
 	//// -----------------------------------------------------------------------------
@@ -148,11 +157,11 @@ int main()
 		//	//break;
 		//}
 
-		//if (level.collision(camera)){
-		//	std::cout << "Lose" << std::endl;
-		//	glfwSetWindowTitle(window, "Lose");
-		//	//break;
-		//}
+		if (level.collision(camera)){
+			std::cout << "Lose" << std::endl;
+			glfwSetWindowTitle(window, "Lose");
+			break;
+		}
 			
 
 		// input
@@ -170,10 +179,16 @@ int main()
 
 		// RENDER ME
 		setPerFrameUniforms(&basicShader, camera);
-		cubePhong.draw();
+		//cubePhong.draw();
 
 		glBindTexture(GL_TEXTURE_2D, containerTextureID2);
-		cubePhong2.draw();
+		//cubePhong2.draw();
+		//testicles.at(0).draw();
+
+		for (int i = 0; i < testicles.size(); i++)
+		{
+			testicles.at(i).draw();
+		}
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------

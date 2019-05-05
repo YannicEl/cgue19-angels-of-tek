@@ -79,7 +79,7 @@ public:
 		//float velocity = MovementSpeed * deltaTime;
 		float velocity = 2;
 		if (direction == FORWARD) {
-			Position -= Front * MovementSpeed * deltaTime;
+			Position += Front * MovementSpeed * deltaTime;
 		}
 		//if (direction == BACKWARD)
 		//	Position -= Front * velocity;
@@ -87,14 +87,14 @@ public:
 			if (line > 1){
 				//std::cout << line;
 				line -= 1;
-				Position -= Right * velocity;
+				Position = glm::vec3(Position.x -1, Position.y, Position.z);
 			}
 		}
 		if (direction == RIGHT) {
 			if (line < 5) {
 				//std::cout << line;
 				line += 1;
-				Position += Right * velocity;
+				Position = glm::vec3(Position.x + 1, Position.y, Position.z);
 			}
 		}
 	}
