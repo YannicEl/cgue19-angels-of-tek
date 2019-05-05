@@ -101,20 +101,17 @@ int main()
 
 	// configure camera settings
 	// -----------------------------
-	camera.MovementSpeed = 3.0f;
+	camera.MovementSpeed = 0.5f;
 	camera.MouseSensitivity = 1.5f;
 
 	// SIMON SHADER
 	Shader basicShader("basic.vert", "basic.frag");
-	Shader basicShader2("basic.vert", "basic.frag");
 
 
 	// load models
 	// -----------
-	//Model ourModel("assets/models/nanosuit/nanosuit.obj");
-	//Model ourModel("assets/models/IronMan/IronMan.obj");
-	//Model ourModel("assets/models/bugatti/bugatti.obj");
-	//Model ourModel("assets/models/dennis/rp_dennis_posed_004_30k_native.obj");
+	Model ourModel("assets/models/nanosuit/nanosuit.obj");
+	ourModel.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -10.0f, -20.0f)));
 
 	// EXPERIMENTAL SIMON CUBEZ
 	Material cubePhongMaterial(&basicShader, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
@@ -167,11 +164,11 @@ int main()
 		//	//break;
 		//}
 
-		if (level.collision(camera)){
-			std::cout << "Lose" << std::endl;
-			glfwSetWindowTitle(window, "Lose");
-			break;
-		}
+		//if (level.collision(camera)){
+		//	std::cout << "Lose" << std::endl;
+		//	glfwSetWindowTitle(window, "Lose");
+		//	//break;
+		//}
 			
 
 		// input
@@ -184,6 +181,8 @@ int main()
 		glClearColor(1, 1, 1, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		ourModel.Draw(basicShader);
+
 		// BIND ME
 		glBindTexture(GL_TEXTURE_2D, containerTextureID);
 
@@ -194,8 +193,8 @@ int main()
 		movableObjectThatIsNotASimpleFirstPersonCamera.draw();
 
 		glBindTexture(GL_TEXTURE_2D, containerTextureID2);
-		//cubePhong2.draw();
-		//testicles.at(0).draw();
+		cubePhong2.draw();
+		testicles.at(0).draw();
 
 		for (int i = 0; i < testicles.size(); i++)
 		{

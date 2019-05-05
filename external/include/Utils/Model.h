@@ -31,10 +31,11 @@ public:
 	vector<Mesh> meshes;
 	string directory;
 	bool gammaCorrection;
+	glm::mat4 _modelMatrix;
 
 	/*  Functions   */
 	// constructor, expects a filepath to a 3D model.
-	Model(string const &path, bool gamma = false) : gammaCorrection(gamma)
+	Model(string const &path, glm::mat4 _modelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)), bool gamma = false) : gammaCorrection(gamma)
 	{
 		loadModel(path);
 	}
@@ -42,8 +43,15 @@ public:
 	// draws the model, and thus all its meshes
 	void Draw(Shader shader)
 	{
+		Shader* temp = &shader;
+		temp->setMat4("modelMatrix", _modelMatrix);
 		for (unsigned int i = 0; i < meshes.size(); i++)
 			meshes[i].Draw(shader);
+	}
+
+	void transform(glm::mat4 transformation)
+	{
+		_modelMatrix = transformation * _modelMatrix;
 	}
 
 private:
