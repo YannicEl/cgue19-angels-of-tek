@@ -37,6 +37,7 @@ int score = 0;
 Level level("😡");
 float movingObjPos = 0.5f;
 int temp = 1;
+glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -56,6 +57,7 @@ int main()
 {
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
 	//engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
+	engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
 
 
 	// glfw: initialize and configure
@@ -185,7 +187,17 @@ int main()
 		// render
 		// ------
 		//glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClearColor(1, 1, 1, 1);
+
+		//glClearColor(1, 1, 1, 1);
+
+		color.x = (rand() % 100) / 100.0f;
+		color.y = (rand() % 100) / 100.0f;
+		color.z = (rand() % 100) / 100.0f;
+
+
+		std::cout << (rand() % 100) / 100 << std::endl;
+
+		glClearColor(color.x, color.y, color.z, color.w);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		ourModel.Draw(basicShader);
@@ -323,7 +335,7 @@ void moveMoveableObject(Geometry& obj) {
 	}
 
 	movingObjPos += temp * 0.1f;
-	std::cout << movingObjPos << std::endl;
+	//std::cout << movingObjPos << std::endl;
 	//std::cout << temp << std::endl;
 	obj.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.01f * temp, 0.0f, 0.0f)));
 }
