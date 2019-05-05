@@ -174,7 +174,7 @@ int main()
 		if (level.collision(camera)){
 			std::cout << "Lose" << std::endl;
 			glfwSetWindowTitle(window, "Lose");
-			//break;
+			break;
 		}
 			
 

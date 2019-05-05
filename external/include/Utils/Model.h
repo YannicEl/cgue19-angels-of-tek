@@ -54,6 +54,11 @@ public:
 		_modelMatrix = transformation * _modelMatrix;
 	}
 
+	void resetModelMatrix()
+	{
+		_modelMatrix = glm::mat4(1);
+	}
+
 private:
 	/*  Functions   */
 	// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.

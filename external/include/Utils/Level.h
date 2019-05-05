@@ -12,7 +12,7 @@ public:
 	Level(string wtf) {
 		for (int i = 0; i < 100; i++)
 		{
-			level1.push_back(glm::vec4(rand() % 5 - 2, -1 * i * 2 + 5, 1, 4));
+			level1.push_back(glm::vec4(rand() % 5 - 2, -1 * i * 2 - 25, 1, 4));
 		}
 		//level1.push_back(glm::vec4(-2, -6, 1, 4));
 		//level1.push_back(glm::vec4(-1, -9, 1, 4));
@@ -37,6 +37,12 @@ public:
 				return true;
 			}
 		}
+		return false;
+	}
+
+	bool win() {
+		if (coutner >= level1.size() - 1)
+			return true;
 		return false;
 	}
 
