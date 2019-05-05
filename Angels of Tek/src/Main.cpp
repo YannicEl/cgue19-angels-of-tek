@@ -24,6 +24,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 unsigned int loadTexture(const char *path);
+void moveMoveableObject(Geometry& obj);
 void setPerFrameUniforms(Shader* shader, Camera& camera/*, DirectionalLight& dirL, PointLight& pointL*/);
 
 static void APIENTRY DebugCallbackDefault(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const GLvoid* userParam);
@@ -34,13 +35,15 @@ static bool _wireframe = false;
 static bool _culling = true;
 int score = 0;
 Level level("😡");
+float movingObjPos = 0.5f;
+int temp = 1;
 
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.3f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -118,6 +121,9 @@ int main()
 	Geometry cubePhong = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)), Geometry::createCubeGeometry(1.5f, 1.5f, 1.5f), &cubePhongMaterial);
 	Material cubePhongMaterial2(&basicShader, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
 	Geometry cubePhong2 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 0.0f)), Geometry::createCubeGeometry(1.0f, 1.5f, 0.5f), &cubePhongMaterial2);
+		
+	Geometry sickVehicleBruh = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 2.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 0.2f), &cubePhongMaterial2);
+	Geometry movableObjectThatIsNotASimpleFirstPersonCamera = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(.0f, 0.50f, -6.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 0.2f), &cubePhongMaterial2);
 
 	vector<Geometry> testicles;
 
@@ -147,6 +153,10 @@ int main()
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 		camera.ProcessKeyboard(FORWARD, deltaTime);
+		moveMoveableObject(movableObjectThatIsNotASimpleFirstPersonCamera);
+
+		sickVehicleBruh.resetModelMatrix();
+		sickVehicleBruh.transform(glm::translate(glm::mat4(1.0f), glm::vec3(camera.Position.x, 0.0f, camera.Position.z + -1.0f)));
 
 		//std::cout << camera.Position.z << std::endl;
 
@@ -180,6 +190,8 @@ int main()
 		// RENDER ME
 		setPerFrameUniforms(&basicShader, camera);
 		//cubePhong.draw();
+		sickVehicleBruh.draw();
+		movableObjectThatIsNotASimpleFirstPersonCamera.draw();
 
 		glBindTexture(GL_TEXTURE_2D, containerTextureID2);
 		//cubePhong2.draw();
@@ -289,6 +301,25 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	// make sure the viewport matches the new window dimensions; note that width and 
 	// height will be significantly larger than specified on retina displays.
 	glViewport(0, 0, width, height);
+}
+
+// utility function for moving the moveable object
+// ---------------------------------------------------
+void moveMoveableObject(Geometry& obj) {
+
+	if (movingObjPos >= 6.0f)
+	{
+		temp = -1;
+	}
+	else if (movingObjPos <= -6.0f)
+	{
+		temp = 1;
+	}
+
+	movingObjPos += temp * 0.1f;
+	std::cout << movingObjPos << std::endl;
+	//std::cout << temp << std::endl;
+	obj.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.01f * temp, 0.0f, 0.0f)));
 }
 
 // utility function for loading a 2D texture from file
