@@ -57,11 +57,10 @@ int main()
 {
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
 	//engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
-	//engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
+	engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
 
 
 	// glfw: initialize and configure
-	// ------------------------------
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -72,7 +71,6 @@ int main()
 #endif
 
 	// glfw window creation
-	// --------------------
 	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Angels of Tek", NULL, NULL);
 	if (window == NULL)
 	{
@@ -90,7 +88,6 @@ int main()
 	glfwSetCursorPosCallback(window, mouse_callback);
 
 	// glad: load all OpenGL function pointers
-	// ---------------------------------------
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
@@ -98,11 +95,9 @@ int main()
 	}
 
 	// configure global opengl state
-	// -----------------------------
 	glEnable(GL_DEPTH_TEST);
 
 	// configure camera settings
-	// -----------------------------
 	camera.MovementSpeed = 4.0f;
 	camera.MouseSensitivity = 1.5f;
 
@@ -111,7 +106,6 @@ int main()
 
 
 	// load models
-	// -----------
 	Model ourModel("assets/models/nanosuit/nanosuit.obj");
 	//ourModel.transform(glm::rotate(glm::mat4(1.0f), -1.35f, glm::vec3(1.0f, 0.0f, 0.0f)));
 	//ourModel.transform(glm::scale(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, 0.2f)));
@@ -144,7 +138,6 @@ int main()
 
 
 	//// load textures (we now use a utility function to keep the code more organized)
-	//// -----------------------------------------------------------------------------
 	//unsigned int specularMap = loadTexture("assets/textures/container2_specular.png");
 
 	GLuint containerTextureID = loadTexture("assets/textures/container.jpg");
@@ -156,7 +149,6 @@ int main()
 	while (!glfwWindowShouldClose(window))
 	{
 		// per-frame time logic
-		// --------------------
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
@@ -187,13 +179,11 @@ int main()
 		}
 			
 
-		// input
-		// -----
 		glfwPollEvents();
 
-		// render
-		// ------
-		//glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+
+
+		glClearColor(0.0f, 0.4f, 0.6f, 1.0f);
 
 		//glClearColor(1, 1, 1, 1);
 
@@ -204,7 +194,7 @@ int main()
 
 		std::cout << (rand() % 100) / 100 << std::endl;
 
-		glClearColor(color.x, color.y, color.z, color.w);
+		// glClearColor(color.x, color.y, color.z, color.w);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		ourModel.Draw(basicShader);
@@ -234,14 +224,10 @@ int main()
 		lane4.draw();
 		lane5.draw();
 
-		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	// glfw: terminate, clearing all previously allocated GLFW resources.
-	// ------------------------------------------------------------------
 	glfwTerminate();
 	return 0;
 }
@@ -263,7 +249,7 @@ void setPerFrameUniforms(Shader* shader, Camera& camera/*, DirectionalLight& dir
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-
+	//Lass mas drinnan auch wenn nix drinnan ist!
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -281,19 +267,20 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	}
 
 	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+	float yoffset = lastY - ypos;
 
 	lastX = xpos;
 	lastY = ypos;
-
-	//camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	// F1 - Wireframe
+	// F8 - Wireframe
 	// F2 - Culling
 	// Esc - Exit
+	// Shift - SPeeeEEeeeD1!
+	// Levt - nach links düsen
+	// Rechts - nach rechts düsen
 
 	if (action != GLFW_PRESS) return;
 
@@ -302,7 +289,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	case GLFW_KEY_ESCAPE:
 		glfwSetWindowShouldClose(window, true);
 		break;
-	case GLFW_KEY_F1:
+	case GLFW_KEY_F8:
 		_wireframe = !_wireframe;
 		glPolygonMode(GL_FRONT_AND_BACK, _wireframe ? GL_LINE : GL_FILL);
 		break;
@@ -310,6 +297,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		_culling = !_culling;
 		if (_culling) glEnable(GL_CULL_FACE);
 		else glDisable(GL_CULL_FACE);
+		break;
+	case GLFW_KEY_LEFT_SHIFT:
+		camera.MovementSpeed += 1.0f;
 		break;
 	case GLFW_KEY_W:
 		//camera.ProcessKeyboard(FORWARD, deltaTime);
@@ -326,24 +316,20 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 }
 
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
+// make windows resizesable
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-	// make sure the viewport matches the new window dimensions; note that width and 
-	// height will be significantly larger than specified on retina displays.
 	glViewport(0, 0, width, height);
 }
 
 // utility function for moving the moveable object
-// ---------------------------------------------------
 void moveMoveableObject(Geometry& obj) {
 
-	if (movingObjPos >= 6.0f)
+	if (movingObjPos >= 20.0f)
 	{
 		temp = -1;
 	}
-	else if (movingObjPos <= -6.0f)
+	else if (movingObjPos <= -20.0f)
 	{
 		temp = 1;
 	}
@@ -351,11 +337,10 @@ void moveMoveableObject(Geometry& obj) {
 	movingObjPos += temp * 0.1f;
 	//std::cout << movingObjPos << std::endl;
 	//std::cout << temp << std::endl;
-	obj.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.01f * temp, 0.0f, 0.0f)));
+	obj.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.01f * temp * deltaTime * 60.0f, 0.0f, 0.0f)));
 }
 
 // utility function for loading a 2D texture from file
-// ---------------------------------------------------
 unsigned int loadTexture(char const * path)
 {
 	GLuint textureID;
@@ -386,10 +371,11 @@ unsigned int loadTexture(char const * path)
 	}
 	else
 	{
-		std::cout << "Texture failed to load at path: " << path << std::endl;
+		std::cout << "Texture failed to load at path: " << path << ".txt" << std::endl;
 		stbi_image_free(data);
 	}
 
+	// Aspirin 500mg ohne Mwst.
 	return textureID;
 }
 
@@ -405,8 +391,6 @@ static std::string FormatDebugOutput(GLenum source, GLenum type, GLuint id, GLen
 	std::string typeString;
 	std::string severityString;
 
-	// The AMD variant of this extension provides a less detailed classification of the error,
-	// which is why some arguments might be "Unknown".
 	switch (source) {
 	case GL_DEBUG_SOURCE_API: {
 		sourceString = "API";

@@ -10,7 +10,7 @@ public:
 
 	vector <glm::vec4> level1;
 	Level(string wtf) {
-		for (int i = 0; i < 1000; i++)
+		for (int i = 0; i < 100; i++)
 		{
 			level1.push_back(glm::vec4(rand() % 5 - 2, -1 * i * 2 - 25, 1, 4));
 		}
