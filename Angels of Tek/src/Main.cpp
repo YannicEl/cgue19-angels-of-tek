@@ -57,7 +57,7 @@ int main()
 {
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
 	//engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
-	engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
+	//engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
 
 
 	// glfw: initialize and configure
@@ -122,6 +122,12 @@ int main()
 	Geometry cubePhong = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)), Geometry::createCubeGeometry(1.5f, 1.5f, 1.5f), &cubePhongMaterial);
 	Material cubePhongMaterial2(&basicShader, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
 	Geometry cubePhong2 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 0.0f)), Geometry::createCubeGeometry(1.0f, 1.5f, 0.5f), &cubePhongMaterial2);
+	
+	Geometry lane1 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
+	Geometry lane2 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
+	Geometry lane3 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
+	Geometry lane4 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
+	Geometry lane5 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
 		
 	Geometry sickVehicleBruh = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 2.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 0.2f), &cubePhongMaterial2);
 	Geometry movableObjectThatIsNotASimpleFirstPersonCamera = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.50f, -40.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 0.2f), &cubePhongMaterial2);
@@ -143,6 +149,7 @@ int main()
 
 	GLuint containerTextureID = loadTexture("assets/textures/container.jpg");
 	GLuint containerTextureID2 = loadTexture("assets/textures/container2.png");
+	GLuint laneTexture= loadTexture("assets/textures/lane.png");
 
 	// render loop
 	// -----------
@@ -219,6 +226,13 @@ int main()
 		{
 			testicles.at(i).draw();
 		}
+
+		glBindTexture(GL_TEXTURE_2D, laneTexture);
+		lane1.draw();
+		lane2.draw();
+		lane3.draw();
+		lane4.draw();
+		lane5.draw();
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
