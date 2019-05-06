@@ -40,8 +40,8 @@ int temp = 1;
 glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1280;
+const unsigned int SCR_HEIGHT = 768;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.3f, 3.0f));
