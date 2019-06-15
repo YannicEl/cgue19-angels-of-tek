@@ -35,7 +35,7 @@ static std::string FormatDebugOutput(GLenum source, GLenum type, GLuint id, GLen
 static bool _wireframe = false;
 static bool _culling = true;
 int score = 0;
-Level level("😡");
+Level level("😡", 200.0f, 4.0f);
 float movingObjPos = 0.5f;
 int temp = 1;
 glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -56,11 +56,6 @@ float lastFrame = 0.0f;
 
 int main()
 {
-	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
-	//engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
-	//engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
-
-
 	// glfw: initialize and configure
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -102,9 +97,9 @@ int main()
 	camera.MovementSpeed = 4.0f;
 	camera.MouseSensitivity = 1.5f;
 
-	// SIMON SHADER
-	//Shader basicShader("basic.vert", "basic.frag");
+	// load shader & set up texture positions
 	Shader basicShader("pbr.vert", "pbr.frag");
+	Shader oldBasicShader("model.vert", "model.frag");
 
 	basicShader.use();
 	basicShader.setInt("albedoMap", 0);
@@ -137,29 +132,28 @@ int main()
 	basicShader.use();
 	basicShader.setMat4("viewProjMatrix", projection);
 
-	// load models
+	// load & position model
 	Model ourModel("assets/models/nanosuit/nanosuit.obj");
 	ourModel.transform(glm::rotate(glm::mat4(1.0f), -1.35f, glm::vec3(1.0f, 0.0f, 0.0f)));
 	ourModel.transform(glm::scale(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, 0.2f)));
 	ourModel.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 2.0f)));
 
-	// EXPERIMENTAL SIMON CUBEZ
+	// generate Materials
 	Material cubePhongMaterial(&basicShader, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
-	Geometry cubePhong = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)), Geometry::createCubeGeometry(1.5f, 1.5f, 1.5f), &cubePhongMaterial);
 	Material cubePhongMaterial2(&basicShader, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
-	Geometry cubePhong2 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 0.0f)), Geometry::createCubeGeometry(1.0f, 1.5f, 0.5f), &cubePhongMaterial2);
 	
+	// generate lanes
 	Geometry lane1 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
 	Geometry lane2 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
 	Geometry lane3 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
 	Geometry lane4 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
 	Geometry lane5 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
-		
-	Geometry sickVehicleBruh = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 2.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 0.2f), &cubePhongMaterial2);
+
+	// moving cube
 	Geometry movableObjectThatIsNotASimpleFirstPersonCamera = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.50f, -40.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 0.2f), &cubePhongMaterial2);
 
+	// generate obstacles
 	vector<Geometry> testicles;
-
 	for (int i = 0; i < level.level1.size(); i++)
 	{
 		glm::vec4 pos = level.level1.at(i);
@@ -167,15 +161,16 @@ int main()
 	}
 
 	Geometry WtfOhneDemCubeGehtDasProgrammNichtKannstDuMirDasErklärenSiomonWesp (Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 0.0f)), Geometry::createCubeGeometry(0.5f, 0.5f, 0.5f), &cubePhongMaterial));
-	Geometry SickoMode (Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -5)), Geometry::createCubeGeometry(1.0f, 1.0f, 1.0f), &cubePhongMaterial));
 
-
-	//// load textures (we now use a utility function to keep the code more organized)
-	//unsigned int specularMap = loadTexture("assets/textures/container2_specular.png");
-
+	// load cube textures
 	GLuint containerTextureID = loadTexture("assets/textures/container.jpg");
 	GLuint containerTextureID2 = loadTexture("assets/textures/container2.png");
 	GLuint laneTexture= loadTexture("assets/textures/lane.png");
+
+	// start sound engine
+	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
+	engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
+	//engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
 
 	// render loop
 	// -----------
@@ -186,14 +181,6 @@ int main()
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 		camera.ProcessKeyboard(FORWARD, deltaTime);
-		moveMoveableObject(movableObjectThatIsNotASimpleFirstPersonCamera);
-
-		ourModel.resetModelMatrix();
-		ourModel.transform(glm::rotate(glm::mat4(1.0f), -1.35f, glm::vec3(1.0f, 0.0f, 0.0f)));
-		ourModel.transform(glm::scale(glm::mat4(1.0f), glm::vec3(0.05f, 0.05f, 0.05f)));
-		ourModel.transform(glm::translate(glm::mat4(1.0f), glm::vec3(camera.Position.x, -0.05f, camera.Position.z)));
-
-		//std::cout << camera.Position.z << std::endl;
 
 		std::stringstream str;
 		str << level.coutner;
@@ -212,44 +199,36 @@ int main()
 		}
 			
 
+		// reset
 		glfwPollEvents();
-
-
-
 		glClearColor(0.0f, 0.4f, 0.6f, 1.0f);
-
-		//glClearColor(1, 1, 1, 1);
-
-		color.x = (rand() % 100) / 100.0f;
-		color.y = (rand() % 100) / 100.0f;
-		color.z = (rand() % 100) / 100.0f;
-
-
-		//std::cout << (rand() % 100) / 100 << std::endl;
-
-		// glClearColor(color.x, color.y, color.z, color.w);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		ourModel.Draw(basicShader);
+		// PSYCHO MODE
+		/*color.x = (rand() % 100) / 100.0f;
+		color.y = (rand() % 100) / 100.0f;
+		color.z = (rand() % 100) / 100.0f;
+		glClearColor(color.x, color.y, color.z, color.w);*/
+		
 
-		// BIND ME
-		//glBindTexture(GL_TEXTURE_2D, containerTextureID);
+		oldBasicShader.use();
+		setPerFrameUniforms(&oldBasicShader, camera);
 
-		// RENDER ME
-		setPerFrameUniforms(&basicShader, camera);
-		//cubePhong.draw();
+		// move & draw model
+		ourModel.resetModelMatrix();
+		ourModel.transform(glm::rotate(glm::mat4(1.0f), -1.35f, glm::vec3(1.0f, 0.0f, 0.0f)));
+		ourModel.transform(glm::scale(glm::mat4(1.0f), glm::vec3(0.05f, 0.05f, 0.05f)));
+		ourModel.transform(glm::translate(glm::mat4(1.0f), glm::vec3(camera.Position.x, -0.05f, camera.Position.z)));
+		ourModel.Draw(oldBasicShader);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, containerTextureID);
+		moveMoveableObject(movableObjectThatIsNotASimpleFirstPersonCamera);
 		movableObjectThatIsNotASimpleFirstPersonCamera.draw();
-
-		//SickoMode.draw();
-		//basicShader.setMat4("modelMatrix", glm::translate(glm::mat4(1.0f), glm::vec3(0, 0.0f, -5)));
-		//renderSphere();
-		// render rows*column number of spheres with material properties defined by textures (they all have the same material properties)
-		glm::mat4 model = glm::mat4(1.0f);
-
-
 		//glBindTexture(GL_TEXTURE_2D, containerTextureID2);
-		//cubePhong2.draw();
-		//testicles.at(0).draw();
+
+		basicShader.use();
+		setPerFrameUniforms(&basicShader, camera);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, albedo);
@@ -271,7 +250,7 @@ int main()
 		basicShader.setVec3("lightPositions[0]", pos);
 		basicShader.setVec3("lightColors[0]", glm::vec3(150.0f, 150.0f, 150.0f));
 
-		pos = glm::vec3(-1, -2, 0);
+		/*pos = glm::vec3(-1, -2, 0);
 		basicShader.setVec3("lightPositions[1]", pos);
 		basicShader.setVec3("lightColors[1]", glm::vec3(150.0f, 150.0f, 150.0f));
 
@@ -285,10 +264,11 @@ int main()
 
 		pos = glm::vec3(2, -2, 0);
 		basicShader.setVec3("lightPositions[4]", pos);
-		basicShader.setVec3("lightColors[4]", glm::vec3(150.0f, 150.0f, 150.0f));
+		basicShader.setVec3("lightColors[4]", glm::vec3(150.0f, 150.0f, 150.0f));*/
 
 
-		//glBindTexture(GL_TEXTURE_2D, laneTexture);
+		// draw lanes
+		glBindTexture(GL_TEXTURE_2D, laneTexture);
 		lane1.draw();
 		lane2.draw();
 		lane3.draw();

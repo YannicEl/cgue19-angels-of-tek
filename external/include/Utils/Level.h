@@ -9,10 +9,16 @@ public:
 	int coutner = 0;
 
 	vector <glm::vec4> level1;
-	Level(string wtf) {
+	Level(string wtf, float bpm, float offset) {
+		float bps = 1.0f / (bpm / 60.0f);
+		offset *= 4.0f;
+
 		for (int i = 0; i < 100; i++)
 		{
-			level1.push_back(glm::vec4(rand() % 5 - 2, -1 * i * 2 - 25, 1, 4));
+			//level1.push_back(glm::vec4(rand() % 5 - 2, -1 * i * 2 - 25, 1, 4));
+			//level1.push_back(glm::vec4(rand() % 5 - 2, -i * 4, 1, 4));
+			level1.push_back(glm::vec4(rand() % 5 - 2, (-i * bps * 4.0f) - offset, 1, 4));
+			//std::cout << -i * bps * 4.0f << std::endl;
 		}
 		//level1.push_back(glm::vec4(-2, -6, 1, 4));
 		//level1.push_back(glm::vec4(-1, -9, 1, 4));
@@ -32,7 +38,7 @@ public:
 		if (camera.Position.z < obstacle.y && coutner < level1.size() - 1)
 			coutner++;
 
-		if (camera.line - 3 == obstacle.x){
+		if (camera.line - 3 == obstacle.x) {
 			if (camera.Position.z - 1 > (obstacle.y - 0.5f) && camera.Position.z - 1 < (obstacle.y + 0.5f)) {
 				return true;
 			}

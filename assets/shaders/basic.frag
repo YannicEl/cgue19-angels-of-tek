@@ -18,7 +18,5 @@ void main()
 {
     vec3 texColor = texture(colorTexture, vert.uv).rgb;
     FragColor = vec4(texColor * materialCoefficients.x, 1);
-    
-
     //FragColor = vec4(diffuseColor, 1.0);
 }
