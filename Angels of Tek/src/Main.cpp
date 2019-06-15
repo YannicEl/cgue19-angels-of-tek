@@ -26,6 +26,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 unsigned int loadTexture(const char *path);
 void moveMoveableObject(Geometry& obj);
 void setPerFrameUniforms(Shader* shader, Camera& camera/*, DirectionalLight& dirL, PointLight& pointL*/);
+void renderSphere();
 
 static void APIENTRY DebugCallbackDefault(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const GLvoid* userParam);
 static std::string FormatDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, const char* msg);
@@ -57,7 +58,7 @@ int main()
 {
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
 	//engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
-	engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
+	//engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
 
 
 	// glfw: initialize and configure
@@ -102,14 +103,45 @@ int main()
 	camera.MouseSensitivity = 1.5f;
 
 	// SIMON SHADER
-	Shader basicShader("basic.vert", "basic.frag");
+	//Shader basicShader("basic.vert", "basic.frag");
+	Shader basicShader("pbr.vert", "pbr.frag");
 
+	basicShader.use();
+	basicShader.setInt("albedoMap", 0);
+	basicShader.setInt("normalMap", 1);
+	basicShader.setInt("metallicMap", 2);
+	basicShader.setInt("roughnessMap", 3);
+	basicShader.setInt("aoMap", 4);
+
+	GLuint albedo = loadTexture("assets/textures/pbr/Titanium-Scuffed_basecolor.png");
+	GLuint normal = loadTexture("assets/textures/pbr/Titanium-Scuffed_normal.png");
+	GLuint metallic = loadTexture("assets/textures/pbr/Titanium-Scuffed_metallic.png");
+	GLuint roughness = loadTexture("assets/textures/pbr/Titanium-Scuffed_roughness.png");
+	GLuint ao = loadTexture("assets/textures/pbr/Titanium-Scuffed_ao.png");
+
+	// lights
+	// ------
+	glm::vec3 lightPositions[] = {
+		glm::vec3(0.0f, 0.0f, 10.0f),
+	};
+	glm::vec3 lightColors[] = {
+		glm::vec3(150.0f, 150.0f, 150.0f),
+	};
+	int nrRows = 7;
+	int nrColumns = 7;
+	float spacing = 2.5;
+
+	// initialize static shader uniforms before rendering
+	// --------------------------------------------------
+	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	basicShader.use();
+	basicShader.setMat4("viewProjMatrix", projection);
 
 	// load models
 	Model ourModel("assets/models/nanosuit/nanosuit.obj");
-	//ourModel.transform(glm::rotate(glm::mat4(1.0f), -1.35f, glm::vec3(1.0f, 0.0f, 0.0f)));
-	//ourModel.transform(glm::scale(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, 0.2f)));
-	//ourModel.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 2.0f)));
+	ourModel.transform(glm::rotate(glm::mat4(1.0f), -1.35f, glm::vec3(1.0f, 0.0f, 0.0f)));
+	ourModel.transform(glm::scale(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, 0.2f)));
+	ourModel.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 2.0f)));
 
 	// EXPERIMENTAL SIMON CUBEZ
 	Material cubePhongMaterial(&basicShader, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
@@ -135,6 +167,7 @@ int main()
 	}
 
 	Geometry WtfOhneDemCubeGehtDasProgrammNichtKannstDuMirDasErklärenSiomonWesp (Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, 0.0f)), Geometry::createCubeGeometry(0.5f, 0.5f, 0.5f), &cubePhongMaterial));
+	Geometry SickoMode (Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, -5)), Geometry::createCubeGeometry(1.0f, 1.0f, 1.0f), &cubePhongMaterial));
 
 
 	//// load textures (we now use a utility function to keep the code more organized)
@@ -192,7 +225,7 @@ int main()
 		color.z = (rand() % 100) / 100.0f;
 
 
-		std::cout << (rand() % 100) / 100 << std::endl;
+		//std::cout << (rand() % 100) / 100 << std::endl;
 
 		// glClearColor(color.x, color.y, color.z, color.w);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -200,24 +233,62 @@ int main()
 		ourModel.Draw(basicShader);
 
 		// BIND ME
-		glBindTexture(GL_TEXTURE_2D, containerTextureID);
+		//glBindTexture(GL_TEXTURE_2D, containerTextureID);
 
 		// RENDER ME
 		setPerFrameUniforms(&basicShader, camera);
 		//cubePhong.draw();
-		//sickVehicleBruh.draw();
 		movableObjectThatIsNotASimpleFirstPersonCamera.draw();
 
-		glBindTexture(GL_TEXTURE_2D, containerTextureID2);
+		//SickoMode.draw();
+		//basicShader.setMat4("modelMatrix", glm::translate(glm::mat4(1.0f), glm::vec3(0, 0.0f, -5)));
+		//renderSphere();
+		// render rows*column number of spheres with material properties defined by textures (they all have the same material properties)
+		glm::mat4 model = glm::mat4(1.0f);
+
+
+		//glBindTexture(GL_TEXTURE_2D, containerTextureID2);
 		//cubePhong2.draw();
-		testicles.at(0).draw();
+		//testicles.at(0).draw();
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, albedo);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, normal);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, metallic);
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, roughness);
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, ao);
 
 		for (int i = 0; i < testicles.size(); i++)
 		{
 			testicles.at(i).draw();
 		}
 
-		glBindTexture(GL_TEXTURE_2D, laneTexture);
+		glm::vec3 pos = glm::vec3(-2 , -2 , 0);
+		basicShader.setVec3("lightPositions[0]", pos);
+		basicShader.setVec3("lightColors[0]", glm::vec3(150.0f, 150.0f, 150.0f));
+
+		pos = glm::vec3(-1, -2, 0);
+		basicShader.setVec3("lightPositions[1]", pos);
+		basicShader.setVec3("lightColors[1]", glm::vec3(150.0f, 150.0f, 150.0f));
+
+		pos = glm::vec3(0, -2, 0);
+		basicShader.setVec3("lightPositions[2]", pos);
+		basicShader.setVec3("lightColors[2]", glm::vec3(150.0f, 150.0f, 150.0f));
+
+		pos = glm::vec3(1, -2, 0);
+		basicShader.setVec3("lightPositions[3]", pos);
+		basicShader.setVec3("lightColors[3]", glm::vec3(150.0f, 150.0f, 150.0f));
+
+		pos = glm::vec3(2, -2, 0);
+		basicShader.setVec3("lightPositions[4]", pos);
+		basicShader.setVec3("lightColors[4]", glm::vec3(150.0f, 150.0f, 150.0f));
+
+
+		//glBindTexture(GL_TEXTURE_2D, laneTexture);
 		lane1.draw();
 		lane2.draw();
 		lane3.draw();
@@ -302,10 +373,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		camera.MovementSpeed += 1.0f;
 		break;
 	case GLFW_KEY_W:
-		//camera.ProcessKeyboard(FORWARD, deltaTime);
+		camera.ProcessKeyboard(FORWARD, deltaTime);
 		break;
 	case GLFW_KEY_S:
-		//camera.ProcessKeyboard(BACKWARD, deltaTime);
+		camera.ProcessKeyboard(BACKWARD, deltaTime);
 		break;
 	case GLFW_KEY_A:
 		camera.ProcessKeyboard(LEFT, deltaTime);
@@ -475,4 +546,101 @@ static std::string FormatDebugOutput(GLenum source, GLenum type, GLuint id, GLen
 	stringStream << ", ID = " << id << "]";
 
 	return stringStream.str();
+}
+
+// renders (and builds at first invocation) a sphere
+// -------------------------------------------------
+unsigned int sphereVAO = 0;
+unsigned int indexCount;
+void renderSphere()
+{
+	if (sphereVAO == 0)
+	{
+		glGenVertexArrays(1, &sphereVAO);
+
+		unsigned int vbo, ebo;
+		glGenBuffers(1, &vbo);
+		glGenBuffers(1, &ebo);
+
+		std::vector<glm::vec3> positions;
+		std::vector<glm::vec2> uv;
+		std::vector<glm::vec3> normals;
+		std::vector<unsigned int> indices;
+
+		const unsigned int X_SEGMENTS = 64;
+		const unsigned int Y_SEGMENTS = 64;
+		const float PI = 3.14159265359;
+		for (unsigned int y = 0; y <= Y_SEGMENTS; ++y)
+		{
+			for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
+			{
+				float xSegment = (float)x / (float)X_SEGMENTS;
+				float ySegment = (float)y / (float)Y_SEGMENTS;
+				float xPos = std::cos(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+				float yPos = std::cos(ySegment * PI);
+				float zPos = std::sin(xSegment * 2.0f * PI) * std::sin(ySegment * PI);
+
+				positions.push_back(glm::vec3(xPos, yPos, zPos));
+				uv.push_back(glm::vec2(xSegment, ySegment));
+				normals.push_back(glm::vec3(xPos, yPos, zPos));
+			}
+		}
+
+		bool oddRow = false;
+		for (int y = 0; y < Y_SEGMENTS; ++y)
+		{
+			if (!oddRow) // even rows: y == 0, y == 2; and so on
+			{
+				for (int x = 0; x <= X_SEGMENTS; ++x)
+				{
+					indices.push_back(y       * (X_SEGMENTS + 1) + x);
+					indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+				}
+			}
+			else
+			{
+				for (int x = X_SEGMENTS; x >= 0; --x)
+				{
+					indices.push_back((y + 1) * (X_SEGMENTS + 1) + x);
+					indices.push_back(y       * (X_SEGMENTS + 1) + x);
+				}
+			}
+			oddRow = !oddRow;
+		}
+		indexCount = indices.size();
+
+		std::vector<float> data;
+		for (int i = 0; i < positions.size(); ++i)
+		{
+			data.push_back(positions[i].x);
+			data.push_back(positions[i].y);
+			data.push_back(positions[i].z);
+			if (uv.size() > 0)
+			{
+				data.push_back(uv[i].x);
+				data.push_back(uv[i].y);
+			}
+			if (normals.size() > 0)
+			{
+				data.push_back(normals[i].x);
+				data.push_back(normals[i].y);
+				data.push_back(normals[i].z);
+			}
+		}
+		glBindVertexArray(sphereVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+		float stride = (3 + 2 + 3) * sizeof(float);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride, (void*)(5 * sizeof(float)));
+	}
+
+	glBindVertexArray(sphereVAO);
+	glDrawElements(GL_TRIANGLE_STRIP, indexCount, GL_UNSIGNED_INT, 0);
 }
