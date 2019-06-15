@@ -151,7 +151,9 @@ int main()
 	Geometry lane5 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
 
 	// create plane
-	Geometry plane = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-1, 0, -3)), Geometry::createPlaneGeometry(4, 4), &cubePhongMaterial2);
+	int width = 50;
+	int height = 4000;
+	Geometry plane = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-0.5 * (width - 1), -1, -200)), Geometry::createPlaneGeometry(width, height), &cubePhongMaterial2);
 
 	// moving cube
 	Geometry movableObjectThatIsNotASimpleFirstPersonCamera = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.50f, -40.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 0.2f), &cubePhongMaterial2);
@@ -173,7 +175,7 @@ int main()
 
 	// start sound engine
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
-	engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
+	//engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
 	//engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
 
 	// render loop
@@ -184,7 +186,7 @@ int main()
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-		//camera.ProcessKeyboard(FORWARD, deltaTime);
+		camera.ProcessKeyboard(FORWARD, deltaTime);
 
 		std::stringstream str;
 		str << level.coutner;
@@ -273,11 +275,11 @@ int main()
 
 		// draw lanes
 		glBindTexture(GL_TEXTURE_2D, laneTexture);
-		//lane1.draw();
-		//lane2.draw();
-		//lane3.draw();
-		//lane4.draw();
-		//lane5.draw();
+		lane1.draw();
+		lane2.draw();
+		lane3.draw();
+		lane4.draw();
+		lane5.draw();
 
 		plane.draw();
 
