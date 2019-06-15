@@ -127,6 +127,13 @@ public:
 	 * @return all sphere data
 	 */
 	static GeometryData createSphereGeometry(unsigned int longitudeSegments, unsigned int latitudeSegments, float radius);
+	/*!
+	 * Creates a PLANE geometry
+	  * @param width: width of the PLANE
+	 * @param height: height of the PLANE
+	 * @return all PLANE data
+	 */
+	static GeometryData createPlaneGeometry(int width, int height);
 };
 
 Geometry::Geometry(glm::mat4 modelMatrix, GeometryData& data, Material* material)
@@ -446,5 +453,56 @@ GeometryData Geometry::createSphereGeometry(unsigned int longitudeSegments, unsi
 	}
 
 
+	return std::move(data);
+}
+
+GeometryData Geometry::createPlaneGeometry(int width, int height)
+{
+	GeometryData data;
+
+	for (int row = 0; row < height; row++) {
+		for (int col = 0; col < width; col++) {
+			data.positions.push_back(glm::vec3(col, 0.0f, row));
+			
+			data.normals.push_back(glm::vec3(0, 1, 0));
+
+			data.uvs.push_back(glm::vec2(0, 0));
+		}
+	}
+
+	//for (int row = 0; row < height - 1; row++) {
+	//	if ((row & 1) == 0) { // even rows
+	//		for (int col = 0; col < width; col++) {
+	//			data.indices.push_back(col + row * width);
+	//			data.indices.push_back(col + (row + 1) * width);
+	//		}
+	//	}
+	//	else { // odd rows
+	//		for (int col = width - 1; col > 0; col--) {
+	//			data.indices.push_back(col + (row + 1) * width);
+	//			data.indices.push_back(col - 1 + +row * width);
+	//		}
+	//	}
+	//}
+
+	for (int row = 0; row < height - 1; row++)
+	{
+		for (int col = 0; col < width - 1; col++)
+		{
+			data.indices.push_back(col + row * width);
+			data.indices.push_back(col + (row + 1) * width);
+			data.indices.push_back(width + (row * width) + col);
+
+
+
+			std::cout << col + row * width << ' ' << col + (row + 1) * width << ' ' << width + (row * width) + col << std::endl;
+		}
+	}
+
+	//data.indices = {
+	//	// front
+	//	0, 1, 2,
+	//	1, 3, 2
+	//};
 	return std::move(data);
 }
