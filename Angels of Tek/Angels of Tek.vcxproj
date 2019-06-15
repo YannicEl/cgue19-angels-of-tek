@@ -19,6 +19,15 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\Geometry.h" />
+    <ClInclude Include="src\Level.h" />
+    <ClInclude Include="src\Material.h" />
+    <ClInclude Include="src\Mesh.h" />
+    <ClInclude Include="src\Model.h" />
+    <ClInclude Include="src\Shader.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{89281764-4192-41E0-B813-DFB62C075125}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

@@ -6,11 +6,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <Utils/Shader.h>
-#include <Utils/Camera.h>
-#include <Utils/Model.h>
-#include <Utils/Geometry.h>
-#include <Utils/Level.h>
+#include "Shader.h"
+#include "Camera.h""
+#include "Model.h"
+#include "Geometry.h"
+#include "Level.h"
 
 #include <iostream>
 #include <sstream>
@@ -43,6 +43,7 @@ glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 // settings
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 768;
+float brightness = 1.0f;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.3f, 3.0f));
@@ -192,11 +193,11 @@ int main()
 			glfwSetWindowTitle(window, "Win");
 		}
 
-		if (level.collision(camera)){
-			std::cout << "Lose" << std::endl;
-			glfwSetWindowTitle(window, "Lose");
-			//break;
-		}
+		//if (level.collision(camera)){
+		//	std::cout << "Lose" << std::endl;
+		//	glfwSetWindowTitle(window, "Lose");
+		//	//break;
+		//}
 			
 
 		// reset
@@ -288,6 +289,7 @@ void setPerFrameUniforms(Shader* shader, Camera& camera/*, DirectionalLight& dir
 	shader->use();
 	shader->setMat4("viewProjMatrix", glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f) * camera.GetViewMatrix());
 	shader->setVec3("cameraWorldPosition", camera.Position);
+	shader->setFloat("prightness", brightness);
 	//shader->setVec3("viewPos", camera.Position);
 	
 
@@ -332,6 +334,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	// Shift - SPeeeEEeeeD1!
 	// Levt - nach links düsen
 	// Rechts - nach rechts düsen
+	// + - alles wird weißer
+	// - - alles wird schwärzer
 
 	if (action != GLFW_PRESS) return;
 
@@ -364,7 +368,15 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	case GLFW_KEY_D:
 		camera.ProcessKeyboard(RIGHT, deltaTime);
 		break;
+	case GLFW_KEY_RIGHT_BRACKET:
+		brightness += 0.1;
+		break;
+	case GLFW_KEY_SLASH:
+		brightness -= 0.1;
+		break;
 	}
+
+	std::cout << brightness << std::endl;
 }
 
 // make windows resizesable
