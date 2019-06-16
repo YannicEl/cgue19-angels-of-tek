@@ -92,7 +92,7 @@ void main() {
 	//gl_Position *=  vec4(1.0, pos_z - 0.5, 1.0, 1.0);
 
 
-	vec2 pos = vec2(gl_Position.x / 10, gl_Position.z  / 10);
+	vec2 pos = vec2(vert.position_world.x / 10, vert.position_world.z  / 10);
 
 	float DF = 0.0;
     // Add a random position
