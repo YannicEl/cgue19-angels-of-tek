@@ -101,6 +101,7 @@ int main()
 	// load shader & set up texture positions
 	Shader basicShader("pbr.vert", "pbr.frag");
 	Shader oldBasicShader("model.vert", "model.frag");
+	Shader planesWalker("simon.fag", "yannic.geil");
 
 	basicShader.use();
 	basicShader.setInt("albedoMap", 0);
@@ -142,6 +143,7 @@ int main()
 	// generate Materials
 	Material cubePhongMaterial(&basicShader, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
 	Material cubePhongMaterial2(&basicShader, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
+	Material polaneswalkerMaterial(&planesWalker, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
 	
 	// generate lanes
 	Geometry lane1 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
@@ -153,7 +155,7 @@ int main()
 	// create plane
 	int width = 50;
 	int height = 4000;
-	Geometry plane = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-0.5 * (width - 1), -1, -200)), Geometry::createPlaneGeometry(width, height), &cubePhongMaterial2);
+	Geometry plane = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-0.5 * (width - 1), -1, -200)), Geometry::createPlaneGeometry(width, height), &polaneswalkerMaterial);
 
 	// moving cube
 	Geometry movableObjectThatIsNotASimpleFirstPersonCamera = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.50f, -40.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 0.2f), &cubePhongMaterial2);
@@ -198,11 +200,11 @@ int main()
 			glfwSetWindowTitle(window, "Win");
 		}
 
-		//if (level.collision(camera)){
-		//	std::cout << "Lose" << std::endl;
-		//	glfwSetWindowTitle(window, "Lose");
-		//	//break;
-		//}
+		if (level.collision(camera)){
+			//std::cout << "Lose" << std::endl;
+			glfwSetWindowTitle(window, "Lose");
+			//break;
+		}
 			
 
 		// reset
@@ -231,7 +233,7 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, containerTextureID);
 		moveMoveableObject(movableObjectThatIsNotASimpleFirstPersonCamera);
 		movableObjectThatIsNotASimpleFirstPersonCamera.draw();
-		//glBindTexture(GL_TEXTURE_2D, containerTextureID2);
+		glBindTexture(GL_TEXTURE_2D, containerTextureID2);
 
 		basicShader.use();
 		setPerFrameUniforms(&basicShader, camera);
@@ -281,6 +283,9 @@ int main()
 		lane4.draw();
 		lane5.draw();
 
+		planesWalker.use();
+		setPerFrameUniforms(&planesWalker, camera);
+		planesWalker.setFloat("u_time", glfwGetTime());
 		plane.draw();
 
 		glfwSwapBuffers(window);
