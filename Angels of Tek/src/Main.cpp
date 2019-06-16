@@ -314,7 +314,7 @@ void setPerFrameUniforms(Shader* shader, Camera& camera/*, DirectionalLight& dir
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-	//Lass mas drinnan auch wenn nix drinnan ist!
+	//Lass mas drinnan auch wenn nix drinnan is!
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
