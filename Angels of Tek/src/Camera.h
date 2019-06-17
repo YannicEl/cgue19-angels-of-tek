@@ -14,7 +14,8 @@ enum Camera_Movement {
 	FORWARD,
 	BACKWARD,
 	LEFT,
-	RIGHT
+	RIGHT,
+	RESET
 };
 
 const float YAW = -90.0f;
@@ -79,6 +80,9 @@ public:
 				line += 1;
 				Position = glm::vec3(Position.x + 1, Position.y, Position.z);
 			}
+		}
+		if (direction == RESET) {
+			Position = glm::vec3(Position.x, Position.y, 3);
 		}
 	}
 

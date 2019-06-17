@@ -39,6 +39,8 @@ Level level("😡", 200.0f, 4.0f);
 float movingObjPos = 0.5f;
 int temp = 1;
 glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+bool pause = true;
+int life = 103;
 
 // settings
 const unsigned int SCR_WIDTH = 1280;
@@ -177,7 +179,7 @@ int main()
 
 	// start sound engine
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
-	engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
+	//engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
 	//engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
 
 	// render loop
@@ -188,10 +190,18 @@ int main()
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
-		camera.ProcessKeyboard(FORWARD, deltaTime);
+		if (!pause) {
+			camera.ProcessKeyboard(FORWARD, deltaTime);
+		}
 
+		// Score as window title
+		//std::stringstream str;
+		//str << level.coutner;
+		//glfwSetWindowTitle(window, str.str().c_str());
+
+		// Lifes as window title
 		std::stringstream str;
-		str << level.coutner;
+		str << life;
 		glfwSetWindowTitle(window, str.str().c_str());
 
 		// Collision / win condition
@@ -201,13 +211,14 @@ int main()
 		}
 
 		if (level.collision(camera)){
-			//std::cout << "Lose" << std::endl;
-			glfwSetWindowTitle(window, "Lose");
-			//break;
+			life--;
 		}
-			
 
-		std::cout << deltaTime << std::endl;
+		if (life <= 0) {
+			camera.ProcessKeyboard(RESET, deltaTime);
+			pause = true;
+			life = 103;
+		}
 
 		// reset
 		glfwPollEvents();
@@ -387,6 +398,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		break;
 	case GLFW_KEY_SLASH:
 		brightness -= 0.1;
+		break;
+	case GLFW_KEY_SPACE:
+		pause = !pause;
 		break;
 	}
 

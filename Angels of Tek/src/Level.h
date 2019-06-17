@@ -11,7 +11,7 @@ public:
 	vector <glm::vec4> level1;
 	Level(string wtf, float bpm, float offset) {
 		float bps = 1.0f / (bpm / 60.0f);
-		offset *= 4.0f;
+		offset *= 0.0f;
 
 		for (int i = 0; i < 100; i++)
 		{
