@@ -177,7 +177,7 @@ int main()
 
 	// start sound engine
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
-	//engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
+	engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
 	//engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
 
 	// render loop
@@ -206,6 +206,8 @@ int main()
 			//break;
 		}
 			
+
+		std::cout << deltaTime << std::endl;
 
 		// reset
 		glfwPollEvents();

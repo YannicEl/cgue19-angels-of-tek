@@ -59,7 +59,8 @@ void main() {
     vel = vec2(cos(a),sin(a));
     DF += snoise(pos+vel)*.25+.25;
 
-    color = vec3( smoothstep(.7,.75,fract(DF)) );
+    float temp = smoothstep(.7,.75,fract(DF));
+    color = vec3( temp, temp * 1.5, temp * 0.75 );
 
-    FragColor = vec4(1.0-color,1.0);
+    FragColor = vec4(color,1.0);
 }
