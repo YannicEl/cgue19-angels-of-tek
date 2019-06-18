@@ -40,7 +40,7 @@ float movingObjPos = 0.5f;
 int temp = 1;
 glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 bool pause = true;
-int life = 103;
+int life = 97;
 
 // settings
 const unsigned int SCR_WIDTH = 1280;
@@ -104,6 +104,8 @@ int main()
 	Shader basicShader("pbr.vert", "pbr.frag");
 	Shader oldBasicShader("model.vert", "model.frag");
 	Shader planesWalker("simon.fag", "yannic.geil");
+	Shader himmerlblau("simon - Kopie.vert", "yannic - Kopie.frag");
+	
 
 	basicShader.use();
 	basicShader.setInt("albedoMap", 0);
@@ -146,6 +148,7 @@ int main()
 	Material cubePhongMaterial(&basicShader, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
 	Material cubePhongMaterial2(&basicShader, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
 	Material polaneswalkerMaterial(&planesWalker, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
+	Material himmerlblauMaterial(&himmerlblau, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
 	
 	// generate lanes
 	Geometry lane1 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
@@ -158,6 +161,7 @@ int main()
 	int width = 50;
 	int height = 4000;
 	Geometry plane = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-0.5 * (width - 1), -1, -200)), Geometry::createPlaneGeometry(width, height), &polaneswalkerMaterial);
+	Geometry sky = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-0.5 * (width - 1), 5, -200)), Geometry::createPlaneGeometry(width, height), &himmerlblauMaterial);
 
 	// moving cube
 	Geometry movableObjectThatIsNotASimpleFirstPersonCamera = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.50f, -40.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 0.2f), &cubePhongMaterial2);
@@ -215,6 +219,7 @@ int main()
 		}
 
 		if (life <= 0) {
+			level.coutner = 0;
 			camera.ProcessKeyboard(RESET, deltaTime);
 			pause = true;
 			life = 103;
@@ -300,6 +305,11 @@ int main()
 		setPerFrameUniforms(&planesWalker, camera);
 		planesWalker.setFloat("u_time", glfwGetTime());
 		plane.draw();
+
+		himmerlblau.use();
+		setPerFrameUniforms(&himmerlblau, camera);
+		himmerlblau.setFloat("u_time", glfwGetTime());
+		sky.draw();
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
