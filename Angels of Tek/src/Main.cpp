@@ -158,8 +158,8 @@ int main()
 	Geometry lane5 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
 
 	// create plane
-	int width = 50;
-	int height = 4000;
+	int width = 100;
+	int height = 8000;
 	Geometry plane = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-0.5 * (width - 1), -1, -200)), Geometry::createPlaneGeometry(width, height), &polaneswalkerMaterial);
 	Geometry sky = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-0.5 * (width - 1), 5, -200)), Geometry::createPlaneGeometry(width, height), &himmerlblauMaterial);
 
