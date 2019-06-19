@@ -13,13 +13,14 @@ in VertexData {
 
 out vec4 color;
 
-uniform vec3 camera_world;
-
+uniform vec3 cameraWorldPosition;
 uniform vec3 materialCoefficients; // x = ambient, y = diffuse, z = specular
 uniform float specularAlpha;
-uniform sampler2D colorTexture;
+uniform vec3 diffuseColor;
 
-uniform struct DirectionalLight {
+//uniform sampler2D colorTexture;
+
+/* uniform struct DirectionalLight {
 	vec3 color;
 	vec3 direction;
 } dirL;
@@ -28,7 +29,7 @@ uniform struct PointLight {
 	vec3 color;
 	vec3 position;
 	vec3 attenuation;
-} pointL;
+} pointL; */
 
 vec3 phong(vec3 n, vec3 l, vec3 v, vec3 diffuseC, float diffuseF, vec3 specularC, float specularF, float alpha, bool attenuate, vec3 attenuation) {
 	float d = length(l);
@@ -41,15 +42,15 @@ vec3 phong(vec3 n, vec3 l, vec3 v, vec3 diffuseC, float diffuseF, vec3 specularC
 
 void main() {	
 	vec3 n = normalize(vert.normal_world);
-	vec3 v = normalize(camera_world - vert.position_world);
+	vec3 v = normalize(cameraWorldPosition - vert.position_world);
 	
-	vec3 texColor = texture(colorTexture, vert.uv).rgb;
-	color = vec4(texColor * materialCoefficients.x, 1); // ambient
+	//vec3 texColor = texture(colorTexture, vert.uv).rgb;
+	color = vec4(diffuseColor * materialCoefficients.x, 1); // ambient
 	
 	// add directional light contribution
-	color.rgb += phong(n, -dirL.direction, v, dirL.color * texColor, materialCoefficients.y, dirL.color, materialCoefficients.z, specularAlpha, false, vec3(0));
+	//color.rgb += phong(n, -dirL.direction, v, dirL.color * texColor, materialCoefficients.y, dirL.color, materialCoefficients.z, specularAlpha, false, vec3(0));
 			
 	// add point light contribution
-	color.rgb += phong(n, pointL.position - vert.position_world, v, pointL.color * texColor, materialCoefficients.y, pointL.color, materialCoefficients.z, specularAlpha, true, pointL.attenuation);
+	//color.rgb += phong(n, pointL.position - vert.position_world, v, pointL.color * texColor, materialCoefficients.y, pointL.color, materialCoefficients.z, specularAlpha, true, pointL.attenuation);
 }
 
