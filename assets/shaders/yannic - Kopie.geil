@@ -3,6 +3,7 @@
 //uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
+uniform vec3 sky_color;
 
 out vec4 FragColor;
 
@@ -61,8 +62,9 @@ void main() {
 
     float temp = smoothstep(.7,.75,fract(DF));
 	color = vec3( temp, temp, temp );
+
 	if(temp < 0.9){
-		color = vec3(0.0f, 0.4f, 0.6f);
+		color = sky_color;
 	}
     
 

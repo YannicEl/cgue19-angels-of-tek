@@ -27,6 +27,7 @@ unsigned int loadTexture(const char *path);
 void moveMoveableObject(Geometry& obj);
 void setPerFrameUniforms(Shader* shader, Camera& camera/*, DirectionalLight& dirL, PointLight& pointL*/);
 void renderSphere();
+float lerp(float a, float b, float f);
 
 static void APIENTRY DebugCallbackDefault(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const GLvoid* userParam);
 static std::string FormatDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, const char* msg);
@@ -40,7 +41,11 @@ float movingObjPos = 0.5f;
 int temp = 1;
 glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 bool pause = true;
-int life = 95;
+int life = 100;
+glm::vec3 skyBlue = glm::vec3(0.0f, 0.4f, 0.6f);
+glm::vec3 skyRed = glm::vec3(0.8f, 0.0f, 0.1f);
+glm::vec3 skyGreen = glm::vec3(0.0f, 0.8f, 0.1f);
+int framesSinceLastDamage = 100;
 
 // settings
 const unsigned int SCR_WIDTH = 1280;
@@ -120,17 +125,6 @@ int main()
 	GLuint roughness = loadTexture("assets/textures/pbr/Titanium-Scuffed_roughness.png");
 	GLuint ao = loadTexture("assets/textures/pbr/Titanium-Scuffed_ao.png");
 
-	// lights
-	// ------
-	glm::vec3 lightPositions[] = {
-		glm::vec3(0.0f, 0.0f, 10.0f),
-	};
-	glm::vec3 lightColors[] = {
-		glm::vec3(150.0f, 150.0f, 150.0f),
-	};
-	int nrRows = 7;
-	int nrColumns = 7;
-	float spacing = 2.5;
 
 	// initialize static shader uniforms before rendering
 	// --------------------------------------------------
@@ -212,20 +206,33 @@ int main()
 			glfwSetWindowTitle(window, "Win");
 		}
 
+		framesSinceLastDamage += 1;
+		if (framesSinceLastDamage > 50)
+			framesSinceLastDamage = 50;
+
 		if (level.collision(camera)){
 			life--;
+			framesSinceLastDamage = 0;
 		}
 
 		if (life <= 0) {
 			level.coutner = 0;
 			camera.ProcessKeyboard(RESET, deltaTime);
 			pause = true;
-			life = 103;
+			life = 100;
 		}
+
+		glm::vec3 skyBlue = glm::vec3(0.0f, 0.4f, 0.6f);
+		glm::vec3 skyRed = glm::vec3(0.8f, 0.0f, 0.1f);
+		glm::vec3 skyGreen = glm::vec3(0.0f, 0.8f, 0.1f);
+
+		// calc bg color
+		float damageFactor = (float)1.0 - (float)((float)framesSinceLastDamage / 50);
+		glm::vec3 bgColor = glm::vec3(glm::mix(skyBlue, skyRed, damageFactor));
 
 		// reset
 		glfwPollEvents();
-		glClearColor(0.0f, 0.4f, 0.6f, 1.0f);
+		glClearColor(bgColor.x, bgColor.y, bgColor.z, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// PSYCHO MODE
@@ -276,7 +283,7 @@ int main()
 			testicles.at(i).draw();
 		}
 
-		glm::vec3 pos = glm::vec3(-2 , -2 , 0);
+		glm::vec3 pos = glm::vec3(0 , -1 , 0);
 		basicShader.setVec3("lightPositions[0]", pos);
 		basicShader.setVec3("lightColors[0]", glm::vec3(150.0f, 150.0f, 150.0f));
 
@@ -313,6 +320,8 @@ int main()
 		himmerlblau.use();
 		setPerFrameUniforms(&himmerlblau, camera);
 		himmerlblau.setFloat("u_time", glfwGetTime());
+
+		himmerlblau.setVec3("sky_color", bgColor);
 		sky.draw();
 
 		glfwSwapBuffers(window);
@@ -337,6 +346,11 @@ void setPerFrameUniforms(Shader* shader, Camera& camera/*, DirectionalLight& dir
 	shader->setUniform("pointL.color", pointL.color);
 	shader->setUniform("pointL.position", pointL.position);
 	shader->setUniform("pointL.attenuation", pointL.attenuation);*/
+}
+
+float lerp(float a, float b, float f)
+{
+	return a + f * (b - a);
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
