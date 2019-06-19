@@ -179,7 +179,7 @@ int main()
 
 	// start sound engine
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
-	//engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
+	engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
 	//engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
 
 	// render loop
@@ -210,6 +210,10 @@ int main()
 
 		if (level.collision(camera)){
 			life--;
+
+			if (framesSinceLastDamage > 1)
+				engine->play2D("assets/geile mukke ballern/Minecraft Original Damage Sound.mp3");
+
 			framesSinceLastDamage = 0;
 		}
 
