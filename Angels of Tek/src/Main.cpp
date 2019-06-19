@@ -40,7 +40,7 @@ float movingObjPos = 0.5f;
 int temp = 1;
 glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 bool pause = true;
-int life = 97;
+int life = 95;
 
 // settings
 const unsigned int SCR_WIDTH = 1280;
@@ -104,7 +104,7 @@ int main()
 	Shader basicShader("pbr.vert", "pbr.frag");
 	Shader oldBasicShader("model.vert", "model.frag");
 	Shader planesWalker("simon.fag", "yannic.geil");
-	Shader himmerlblau("simon - Kopie.vert", "yannic - Kopie.frag");
+	Shader himmerlblau("simon - Kopie.fag", "yannic - Kopie.geil");
 	
 
 	basicShader.use();
@@ -140,9 +140,7 @@ int main()
 
 	// load & position model
 	Model ourModel("assets/models/nanosuit/nanosuit.obj");
-	ourModel.transform(glm::rotate(glm::mat4(1.0f), -1.35f, glm::vec3(1.0f, 0.0f, 0.0f)));
-	ourModel.transform(glm::scale(glm::mat4(1.0f), glm::vec3(0.2f, 0.2f, 0.2f)));
-	ourModel.transform(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -1.0f, 2.0f)));
+	Model hammer("assets/models/hammer/12221_Cat_v1_l3.obj");
 
 	// generate Materials
 	Material cubePhongMaterial(&basicShader, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
@@ -246,6 +244,12 @@ int main()
 		ourModel.transform(glm::scale(glm::mat4(1.0f), glm::vec3(0.05f, 0.05f, 0.05f)));
 		ourModel.transform(glm::translate(glm::mat4(1.0f), glm::vec3(camera.Position.x, -0.05f, camera.Position.z)));
 		ourModel.Draw(oldBasicShader);
+		hammer.resetModelMatrix();
+		hammer.transform(glm::rotate(glm::mat4(1.0f), -1.56f, glm::vec3(1.0f, 0.0f, 0.0f)));
+		hammer.transform(glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f)));
+		hammer.transform(glm::scale(glm::mat4(1.0f), glm::vec3(0.0015f, 0.0015f, 0.0015f)));
+		hammer.transform(glm::translate(glm::mat4(1.0f), glm::vec3(camera.Position.x, 0.11, camera.Position.z - 0.5)));
+		hammer.Draw(oldBasicShader);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, containerTextureID);
