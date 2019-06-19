@@ -200,12 +200,6 @@ int main()
 		str << life;
 		glfwSetWindowTitle(window, str.str().c_str());
 
-		// Collision / win condition
-		if (level.win()) {
-			std::cout << "Win" << std::endl;
-			glfwSetWindowTitle(window, "Win");
-		}
-
 		framesSinceLastDamage += 1;
 		if (framesSinceLastDamage > 50)
 			framesSinceLastDamage = 50;
@@ -229,6 +223,13 @@ int main()
 		// calc bg color
 		float damageFactor = (float)1.0 - (float)((float)framesSinceLastDamage / 50);
 		glm::vec3 bgColor = glm::vec3(glm::mix(skyBlue, skyRed, damageFactor));
+
+		// Collision / win condition
+		if (level.win()) {
+			std::cout << "Win" << std::endl;
+			glfwSetWindowTitle(window, "Win");
+			bgColor = skyGreen;
+		}
 
 		// reset
 		glfwPollEvents();
