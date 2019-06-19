@@ -468,6 +468,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		break;
 	case GLFW_KEY_PRINT_SCREEN:
 		camera.ProcessKeyboard(RESET, deltaTime);
+		pause = true;
 		room = !room;
 		break;
 	case GLFW_KEY_R:

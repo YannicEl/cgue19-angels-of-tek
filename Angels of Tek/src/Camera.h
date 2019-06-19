@@ -84,6 +84,7 @@ public:
 		}
 		if (direction == RESET) {
 			Position = glm::vec3(0, Position.y, 3);
+			line = 3;
 		}
 		if (direction == SHOWCASE) {
 			Position = glm::vec3(0, Position.y, -500);
