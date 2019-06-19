@@ -455,7 +455,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		level.coutner = 0;
 		life = 96;
 		pause = true;
-		room = false;
 		camera.ProcessKeyboard(RESET, deltaTime);
 		break;
 	}

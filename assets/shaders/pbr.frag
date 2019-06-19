@@ -16,8 +16,8 @@ uniform sampler2D roughnessMap;
 uniform sampler2D aoMap;
 
 // lights
-uniform vec3 lightPositions[4];
-uniform vec3 lightColors[4];
+uniform vec3 lightPositions[10];
+uniform vec3 lightColors[10];
 
 uniform float prightness;
 
