@@ -11,6 +11,7 @@
 #include "Model.h"
 #include "Geometry.h"
 #include "Level.h"
+#include "Light.h"
 
 #include <iostream>
 #include <sstream>
@@ -149,7 +150,7 @@ int main()
 	GLuint normalPlastic = loadTexture("assets/textures/pbr/plasticpattern1-ue/plasticpattern1-normal2b.png");
 	GLuint metallicPlastic = loadTexture("assets/textures/pbr/plasticpattern1-ue/plasticpattern1-metalness.png");
 	GLuint roughnessPlastic = loadTexture("assets/textures/pbr/plasticpattern1-ue/plasticpattern1-roughness2.png");
-	GLuint aoPlastic = loadTexture("assets/textures/pbr/plasticpattern1-ue/foam-grip1-ao");
+	GLuint aoPlastic = loadTexture("assets/textures/pbr/plasticpattern1-ue/foam-grip1-ao.png");
 
 
 	// initialize static shader uniforms before rendering
@@ -165,7 +166,7 @@ int main()
 	// generate Materials
 	Material cubePhongMaterial(&basicShader, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
 	Material cubePhongMaterial2(&basicShader, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
-	Material polaneswalkerMaterial(&planesWalker, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
+	Material polaneswalkerMaterial(&planesWalker, glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.3f, 0.3f, 0.1f), 2.0f);
 	Material himmerlblauMaterial(&himmerlblau, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
 	
 	// generate lanes
@@ -201,6 +202,10 @@ int main()
 	GLuint containerTextureID = loadTexture("assets/textures/container.jpg");
 	GLuint containerTextureID2 = loadTexture("assets/textures/container2.png");
 	GLuint laneTexture= loadTexture("assets/textures/lane.png");
+
+	// Initialize lights
+	DirectionalLight dirL(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0, -1, 0));
+	PointLight pointL(glm::vec3(1.0f), glm::vec3(0, -10, 0), glm::vec3(1, 0.4, 0.1));
 
 	// start sound engine
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
@@ -411,6 +416,13 @@ int main()
 		planesWalker.use();
 		setPerFrameUniforms(&planesWalker, camera);
 		planesWalker.setFloat("u_time", glfwGetTime());
+		
+		// lights camera action
+		planesWalker.setVec3("dirL.color", dirL.color);
+		planesWalker.setVec3("dirL.direction", dirL.direction);
+		planesWalker.setVec3("pointL.color", pointL.color);
+		planesWalker.setVec3("pointL.position", pointL.position);
+		planesWalker.setVec3("pointL.attenuation", pointL.attenuation);
 
 		//GLfloat heightMap[width * height] = {};
 		//for (int row = 0; row < height; row++) {
