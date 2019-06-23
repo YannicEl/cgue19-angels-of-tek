@@ -28,6 +28,7 @@ void moveMoveableObject(Geometry& obj);
 void setPerFrameUniforms(Shader* shader, Camera& camera/*, DirectionalLight& dirL, PointLight& pointL*/);
 void teleportRoom();
 float lerp(float a, float b, float f);
+float snoise(glm::vec2 v);
 
 static void APIENTRY DebugCallbackDefault(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const GLvoid* userParam);
 static std::string FormatDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, const char* msg);
@@ -109,7 +110,7 @@ int main()
 	// load shader & set up texture positions
 	Shader basicShader("pbr.vert", "pbr.frag");
 	Shader oldBasicShader("model.vert", "model.frag");
-	Shader planesWalker("simon.fag", "yannic.geil");
+	Shader planesWalker("simon.fag", "phongPhong.frag");
 	Shader himmerlblau("simon - Kopie.fag", "yannic - Kopie.geil");
 	
 
@@ -163,8 +164,8 @@ int main()
 	Geometry lane5 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
 
 	// create plane
-	int width = 100;
-	int height = 8000;
+	const int width = 100;
+	const int height = 8000;
 	Geometry plane = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-0.5 * (width - 1), -1, -200)), Geometry::createPlaneGeometry(width, height), &polaneswalkerMaterial);
 	Geometry sky = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-0.5 * (width - 1), 5, -200)), Geometry::createPlaneGeometry(width, height), &himmerlblauMaterial);
 
@@ -370,13 +371,6 @@ int main()
 		basicShader.setVec3("lightColors[3]", glm::vec3(150.0f, 150.0f, 150.0f));
 
 
-
-
-
-
-
-
-
 		// draw lanes
 		glBindTexture(GL_TEXTURE_2D, laneTexture);
 		lane1.draw();
@@ -388,6 +382,31 @@ int main()
 		planesWalker.use();
 		setPerFrameUniforms(&planesWalker, camera);
 		planesWalker.setFloat("u_time", glfwGetTime());
+
+		//GLfloat heightMap[width * height] = {};
+		//for (int row = 0; row < height; row++) {
+		//	for (int col = 0; col < width; col++) {
+		//		int realPos = width * row + col;
+		//		glm::vec2 pos = glm::vec2(col / 10, row / 10);
+
+
+		//		float DF = 0.0;
+		//		// Add a random position
+		//		float a = 0.0;
+		//		glm::vec2 vel = glm::vec2(glfwGetTime()*.1);
+		//		DF += snoise(glm::vec2(pos) + vel)*.25 + .25;
+
+		//		// Add a random position
+		//		a = snoise(glm::vec2(pos) * glm::vec2(cos(glfwGetTime()*0.15), sin(glfwGetTime()*0.1)) * glm::vec2(0.1))*3.1415;
+		//		vel = glm::vec2(cos(a), sin(a));
+		//		DF += snoise(glm::vec2(pos) + vel)*.25 + .25;
+
+		//		float pos_z = glm::smoothstep(.7f, .75f, glm::fract(DF));
+
+		//		heightMap[realPos] = pos_z;
+		//	}
+		//}
+
 		plane.draw();
 
 		himmerlblau.use();
@@ -424,6 +443,41 @@ void setPerFrameUniforms(Shader* shader, Camera& camera/*, DirectionalLight& dir
 float lerp(float a, float b, float f)
 {
 	return a + f * (b - a);
+}
+
+glm::vec3 mod289(glm::vec3 x) { return x - floor(x * glm::vec3((1.0 / 289.0))) * glm::vec3(289.0); }
+glm::vec2 mod289(glm::vec2 x) { return x - floor(x * glm::vec2((1.0 / 289.0))) * glm::vec2(289.0); }
+glm::vec3 permute(glm::vec3 x) { return mod289(((x * glm::vec3(34.0)) + glm::vec3(1.0)) * x); }
+
+float snoise(glm::vec2 v) {
+	const glm::vec4 C = glm::vec4(0.211324865405187,  // (3.0-sqrt(3.0))/6.0
+		0.366025403784439,  // 0.5*(sqrt(3.0)-1.0)
+		-0.577350269189626,  // -1.0 + 2.0 * C.x
+		0.024390243902439); // 1.0 / 41.0
+	glm::vec2 i = floor(v + glm::dot(v, glm::vec2(C.y, C.y)));
+	glm::vec2 x0 = v - i + glm::dot(i, glm::vec2(C.x, C.x));
+	glm::vec2 i1;
+	i1 = (x0.x > x0.y) ? glm::vec2(1.0, 0.0) : glm::vec2(0.0, 1.0);
+	glm::vec4 x12 = glm::vec4(x0.x, x0.y, x0.x, x0.y) + glm::vec4(C.x, C.x, C.z, C.z);
+	x12.x -= i1.x;
+	x12.y -= i1.y;
+	i = mod289(i); // Avoid truncation effects in permutation
+	glm::vec3 p = permute(permute(i.y + glm::vec3(0.0, i1.y, 1.0))
+		+ i.x + glm::vec3(0.0, i1.x, 1.0));
+
+	glm::vec3 m = glm::max(glm::vec3(0.5) - glm::vec3(glm::dot(x0, x0), glm::dot(glm::vec2(x12.x, x12.y), glm::vec2(x12.x, x12.y)), glm::dot(glm::vec2(x12.z, x12.w), glm::vec2(x12.z, x12.w))), glm::vec3(0.0));
+	m = m * m;
+	m = m * m;
+	glm::vec3 x = glm::vec3(2.0) * glm::fract(p * glm::vec3(C.w) - glm::vec3(1.0));
+	glm::vec3 h = abs(x) - glm::vec3(0.5);
+	glm::vec3 ox = floor(x + glm::vec3(0.5));
+	glm::vec3 a0 = x - ox;
+	m *= glm::vec3(1.79284291400159) - glm::vec3(0.85373472095314) * (a0*a0 + h * h);
+	glm::vec3 g;
+	g.x = a0.x  * x0.x + h.x  * x0.y;
+	g.y = a0.y * x12.x + h.y * x12.y;
+	g.z = a0.z * x12.z + h.z * x12.w;
+	return 130.0 * dot(m, g);
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
