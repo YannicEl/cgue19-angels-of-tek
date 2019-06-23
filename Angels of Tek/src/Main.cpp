@@ -120,11 +120,23 @@ int main()
 	basicShader.setInt("roughnessMap", 3);
 	basicShader.setInt("aoMap", 4);
 
-	GLuint albedo = loadTexture("assets/textures/pbr/Titanium-Scuffed_basecolor.png");
-	GLuint normal = loadTexture("assets/textures/pbr/Titanium-Scuffed_normal.png");
-	GLuint metallic = loadTexture("assets/textures/pbr/Titanium-Scuffed_metallic.png");
-	GLuint roughness = loadTexture("assets/textures/pbr/Titanium-Scuffed_roughness.png");
-	GLuint ao = loadTexture("assets/textures/pbr/Titanium-Scuffed_ao.png");
+	GLuint albedoTitanium = loadTexture("assets/textures/pbr/Titanium-Scuffed/Titanium-Scuffed_basecolor.png");
+	GLuint normalTitanium = loadTexture("assets/textures/pbr/Titanium-Scuffed/Titanium-Scuffed_normal.png");
+	GLuint metallicTitanium = loadTexture("assets/textures/pbr/Titanium-Scuffed/Titanium-Scuffed_metallic.png");
+	GLuint roughnessTitanium = loadTexture("assets/textures/pbr/Titanium-Scuffed/Titanium-Scuffed_roughness.png");
+	GLuint aoTitanium = loadTexture("assets/textures/pbr/Titanium-Scuffed/Titanium-Scuffed_ao.png");
+
+	GLuint albedoCopper = loadTexture("assets/textures/pbr/copper-rock1-Unreal-Engine/copper-rock1-alb.png");
+	GLuint normalCopper = loadTexture("assets/textures/pbr/copper-rock1-Unreal-Engine/copper-rock1-normal.png");
+	GLuint metallicCopper = loadTexture("assets/textures/pbr/copper-rock1-Unreal-Engine/copper-rock1-metal.png");
+	GLuint roughnessCopper = loadTexture("assets/textures/pbr/copper-rock1-Unreal-Engine/copper-rock1-rough.png");
+	GLuint aoCopper = loadTexture("assets/textures/pbr/copper-rock1-Unreal-Engine/copper-rock1-ao.png");
+
+	GLuint albedoGranite = loadTexture("assets/textures/pbr/graniterockface1-Unreal-Engine/graniterockface1_Base_Color.png");
+	GLuint normalGranite = loadTexture("assets/textures/pbr/graniterockface1-Unreal-Engine/graniterockface1_Normal.png");
+	GLuint metallicGranite = loadTexture("assets/textures/pbr/graniterockface1-Unreal-Engine/graniterockface1_Metallic.png");
+	GLuint roughnessGranite = loadTexture("assets/textures/pbr/graniterockface1-Unreal-Engine/graniterockface1_Roughness.png");
+	GLuint aoGranite = loadTexture("assets/textures/pbr/graniterockface1-Unreal-Engine/graniterockface1_Ambient_Occlusion.png");
 
 
 	// initialize static shader uniforms before rendering
@@ -179,7 +191,7 @@ int main()
 
 	// start sound engine
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
-	engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
+	//engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
 	//engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
 
 	// render loop
@@ -251,15 +263,18 @@ int main()
 		glClearColor(color.x, color.y, color.z, color.w);*/
 		
 
-		oldBasicShader.use();
-		setPerFrameUniforms(&oldBasicShader, camera);
+		basicShader.use();
+		setPerFrameUniforms(&basicShader, camera);
 
 		// move & draw model
 		ourModel.resetModelMatrix();
 		ourModel.transform(glm::rotate(glm::mat4(1.0f), -1.35f, glm::vec3(1.0f, 0.0f, 0.0f)));
 		ourModel.transform(glm::scale(glm::mat4(1.0f), glm::vec3(0.05f, 0.05f, 0.05f)));
 		ourModel.transform(glm::translate(glm::mat4(1.0f), glm::vec3(camera.Position.x, -0.05f, camera.Position.z)));
-		ourModel.Draw(oldBasicShader);
+		ourModel.Draw(basicShader);
+
+		oldBasicShader.use();
+		setPerFrameUniforms(&oldBasicShader, camera);
 		hammer.resetModelMatrix();
 		hammer.transform(glm::rotate(glm::mat4(1.0f), -1.56f, glm::vec3(1.0f, 0.0f, 0.0f)));
 		hammer.transform(glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f)));
@@ -276,20 +291,56 @@ int main()
 		basicShader.use();
 		setPerFrameUniforms(&basicShader, camera);
 
+
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, albedo);
+		glBindTexture(GL_TEXTURE_2D, albedoGranite);
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, normal);
+		glBindTexture(GL_TEXTURE_2D, normalGranite);
 		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, metallic);
+		glBindTexture(GL_TEXTURE_2D, metallicGranite);
 		glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, roughness);
+		glBindTexture(GL_TEXTURE_2D, roughnessGranite);
 		glActiveTexture(GL_TEXTURE4);
-		glBindTexture(GL_TEXTURE_2D, ao);
+		glBindTexture(GL_TEXTURE_2D, aoGranite);
 
 		for (int i = 0; i < testicles.size(); i++)
 		{
+			if(i % 3 == 0)
 			testicles.at(i).draw();
+		}
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, albedoCopper);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, normalCopper);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, metallicCopper);
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, roughnessCopper);
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, aoCopper);
+
+		for (int i = 0; i < testicles.size(); i++)
+		{
+			if (i % 3 == 1)
+				testicles.at(i).draw();
+		}
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, albedoTitanium);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, normalTitanium);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, metallicTitanium);
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, roughnessTitanium);
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, aoTitanium);
+
+		for (int i = 0; i < testicles.size(); i++)
+		{
+			if (i % 3 == 2)
+				testicles.at(i).draw();
 		}
 
 		showcase.resetModelMatrix();
@@ -303,44 +354,27 @@ int main()
 		
 
 		glm::vec3 pos = glm::vec3(0, 0.2 , 0);
-		basicShader.setVec3("lightPositions[0]", pos);
-		basicShader.setVec3("lightColors[0]", glm::vec3(150.0f, 150.0f, 150.0f));
+		//basicShader.setVec3("lightPositions[0]", pos);
+		//basicShader.setVec3("lightColors[0]", glm::vec3(150.0f, 150.0f, 150.0f));
 
-		pos = glm::vec3(0, 0.4, 0);
-		basicShader.setVec3("lightPositions[1]", pos);
-		basicShader.setVec3("lightColors[1]", glm::vec3(150.0f, 150.0f, 150.0f));
+		//pos = glm::vec3(0, 0.4, 0);
+		//basicShader.setVec3("lightPositions[1]", pos);
+		//basicShader.setVec3("lightColors[1]", glm::vec3(150.0f, 150.0f, 150.0f));
 
-		pos = glm::vec3(0, 0.6, 0);
-		basicShader.setVec3("lightPositions[2]", pos);
-		basicShader.setVec3("lightColors[2]", glm::vec3(150.0f, 150.0f, 150.0f));
+		//pos = glm::vec3(0, 0.6, 0);
+		//basicShader.setVec3("lightPositions[2]", pos);
+		//basicShader.setVec3("lightColors[2]", glm::vec3(150.0f, 150.0f, 150.0f));
 
-		pos = glm::vec3(0, 0.8, 0);
+		pos = glm::vec3(-0.2, 2, camera.Position.z  + 3);
 		basicShader.setVec3("lightPositions[3]", pos);
 		basicShader.setVec3("lightColors[3]", glm::vec3(150.0f, 150.0f, 150.0f));
 
-		pos = glm::vec3(0, 1, 0);
-		basicShader.setVec3("lightPositions[4]", pos);
-		basicShader.setVec3("lightColors[4]", glm::vec3(150.0f, 150.0f, 150.0f));
 
-		pos = glm::vec3(0, -0.2, 0);
-		basicShader.setVec3("lightPositions[5]", pos);
-		basicShader.setVec3("lightColors[5]", glm::vec3(150.0f, 150.0f, 150.0f));
 
-		pos = glm::vec3(0, -0.4, 0);
-		basicShader.setVec3("lightPositions[6]", pos);
-		basicShader.setVec3("lightColors[6]", glm::vec3(150.0f, 150.0f, 150.0f));
 
-		pos = glm::vec3(0, -0.6, 0);
-		basicShader.setVec3("lightPositions[7]", pos);
-		basicShader.setVec3("lightColors[7]", glm::vec3(150.0f, 150.0f, 150.0f));
 
-		pos = glm::vec3(0, -0.8, 0);
-		basicShader.setVec3("lightPositions[8]", pos);
-		basicShader.setVec3("lightColors[8]", glm::vec3(150.0f, 150.0f, 150.0f));
 
-		pos = glm::vec3(0, -1, 0);
-		basicShader.setVec3("lightPositions[9]", pos);
-		basicShader.setVec3("lightColors[9]", glm::vec3(150.0f, 150.0f, 150.0f));
+
 
 
 		// draw lanes

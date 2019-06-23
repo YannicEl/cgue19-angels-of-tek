@@ -18,8 +18,8 @@ uniform sampler2D roughnessMap;
 uniform sampler2D aoMap;
 
 // lights
-uniform vec3 lightPositions[10];
-uniform vec3 lightColors[10];
+uniform vec3 lightPositions[11];
+uniform vec3 lightColors[11];
 
 uniform float prightness;
 
@@ -95,7 +95,7 @@ void main()
     vec3 V = normalize(cameraWorldPosition - vert.position_world);
 
 	// calculate reflectance
-    vec3 F0 = vec3(0.04); 
+    vec3 F0 = vec3(0.01); 
     F0 = mix(F0, albedo, metallic);
 
     // reflectance equation
