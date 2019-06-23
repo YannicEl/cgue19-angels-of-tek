@@ -133,11 +133,23 @@ int main()
 	GLuint roughnessCopper = loadTexture("assets/textures/pbr/copper-rock1-Unreal-Engine/copper-rock1-rough.png");
 	GLuint aoCopper = loadTexture("assets/textures/pbr/copper-rock1-Unreal-Engine/copper-rock1-ao.png");
 
-	GLuint albedoGranite = loadTexture("assets/textures/pbr/graniterockface1-Unreal-Engine/graniterockface1_Base_Color.png");
-	GLuint normalGranite = loadTexture("assets/textures/pbr/graniterockface1-Unreal-Engine/graniterockface1_Normal.png");
-	GLuint metallicGranite = loadTexture("assets/textures/pbr/graniterockface1-Unreal-Engine/graniterockface1_Metallic.png");
-	GLuint roughnessGranite = loadTexture("assets/textures/pbr/graniterockface1-Unreal-Engine/graniterockface1_Roughness.png");
-	GLuint aoGranite = loadTexture("assets/textures/pbr/graniterockface1-Unreal-Engine/graniterockface1_Ambient_Occlusion.png");
+	//GLuint albedoGranite = loadTexture("assets/textures/pbr/graniterockface1-Unreal-Engine/graniterockface1_Base_Color.png");
+	//GLuint normalGranite = loadTexture("assets/textures/pbr/graniterockface1-Unreal-Engine/graniterockface1_Normal.png");
+	//GLuint metallicGranite = loadTexture("assets/textures/pbr/graniterockface1-Unreal-Engine/graniterockface1_Metallic.png");
+	//GLuint roughnessGranite = loadTexture("assets/textures/pbr/graniterockface1-Unreal-Engine/graniterockface1_Roughness.png");
+	//GLuint aoGranite = loadTexture("assets/textures/pbr/graniterockface1-Unreal-Engine/graniterockface1_Ambient_Occlusion.png");
+
+	GLuint albedoGranite = loadTexture("assets/textures/pbr/dirtwithrocks-dx/dirtwithrocks_Base_Color.png");
+	GLuint normalGranite = loadTexture("assets/textures/pbr/dirtwithrocks-dx/dirtwithrocks_Normal-dx.png");
+	GLuint metallicGranite = loadTexture("assets/textures/pbr/dirtwithrocks-dx/dirtwithrocks_Metallic.png");
+	GLuint roughnessGranite = loadTexture("assets/textures/pbr/dirtwithrocks-dx/dirtwithrocks_Roughness.png");
+	GLuint aoGranite = loadTexture("assets/textures/pbr/dirtwithrocks-dx/dirtwithrocks_Ambient_Occlusion.png");
+
+	GLuint albedoPlastic = loadTexture("assets/textures/pbr/plasticpattern1-ue/plasticpattern1-albedo.png");
+	GLuint normalPlastic = loadTexture("assets/textures/pbr/plasticpattern1-ue/plasticpattern1-normal2b.png");
+	GLuint metallicPlastic = loadTexture("assets/textures/pbr/plasticpattern1-ue/plasticpattern1-metalness.png");
+	GLuint roughnessPlastic = loadTexture("assets/textures/pbr/plasticpattern1-ue/plasticpattern1-roughness2.png");
+	GLuint aoPlastic = loadTexture("assets/textures/pbr/plasticpattern1-ue/foam-grip1-ao");
 
 
 	// initialize static shader uniforms before rendering
@@ -157,11 +169,11 @@ int main()
 	Material himmerlblauMaterial(&himmerlblau, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
 	
 	// generate lanes
-	Geometry lane1 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
-	Geometry lane2 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
-	Geometry lane3 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
-	Geometry lane4 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
-	Geometry lane5 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial2);
+	Geometry lane1 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial);
+	Geometry lane2 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial);
+	Geometry lane3 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial);
+	Geometry lane4 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial);
+	Geometry lane5 = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, -0.4f, 0.0f)), Geometry::createCubeGeometry(0.2f, 0.2f, 1000.0f), &cubePhongMaterial);
 
 	// create plane
 	const int width = 100;
@@ -306,7 +318,7 @@ int main()
 
 		for (int i = 0; i < testicles.size(); i++)
 		{
-			if(i % 3 == 0)
+			if(i % 4 == 0)
 			testicles.at(i).draw();
 		}
 
@@ -323,7 +335,7 @@ int main()
 
 		for (int i = 0; i < testicles.size(); i++)
 		{
-			if (i % 3 == 1)
+			if (i % 4 == 1)
 				testicles.at(i).draw();
 		}
 
@@ -340,7 +352,24 @@ int main()
 
 		for (int i = 0; i < testicles.size(); i++)
 		{
-			if (i % 3 == 2)
+			if (i % 4 == 2)
+				testicles.at(i).draw();
+		}
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, albedoPlastic);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, normalPlastic);
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, metallicPlastic);
+		glActiveTexture(GL_TEXTURE3);
+		glBindTexture(GL_TEXTURE_2D, roughnessPlastic);
+		glActiveTexture(GL_TEXTURE4);
+		glBindTexture(GL_TEXTURE_2D, aoPlastic);
+
+		for (int i = 0; i < testicles.size(); i++)
+		{
+			if (i % 4 == 3)
 				testicles.at(i).draw();
 		}
 
@@ -354,9 +383,9 @@ int main()
 		}
 		
 
-		glm::vec3 pos = glm::vec3(0, 0.2 , 0);
-		//basicShader.setVec3("lightPositions[0]", pos);
-		//basicShader.setVec3("lightColors[0]", glm::vec3(150.0f, 150.0f, 150.0f));
+		glm::vec3 pos = glm::vec3(0, 0.2 , +5);
+		basicShader.setVec3("lightPositions[0]", pos);
+		basicShader.setVec3("lightColors[0]", glm::vec3(150.0f, 150.0f, 150.0f));
 
 		//pos = glm::vec3(0, 0.4, 0);
 		//basicShader.setVec3("lightPositions[1]", pos);
@@ -550,10 +579,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		camera.ProcessKeyboard(RIGHT, deltaTime);
 		break;
 	case GLFW_KEY_RIGHT_BRACKET:
-		brightness += 0.1;
+		brightness += 0.5;
+		std::cout << brightness << std::endl;
 		break;
+
 	case GLFW_KEY_SLASH:
-		brightness -= 0.1;
+		brightness -= 0.5;
+		std::cout << brightness << std::endl;
 		break;
 	case GLFW_KEY_SPACE:
 		pause = !pause;
@@ -572,7 +604,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		break;
 	}
 
-	std::cout << brightness << std::endl;
 }
 
 void teleportRoom() {
