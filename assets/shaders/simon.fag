@@ -47,7 +47,7 @@ float snoise(vec2 v) {
 	return 130.0 * dot(m, g);
 }
 
-float getFuckingCoordinates(vec2 pos, vec2 vel) {
+float getZ(vec2 pos, vec2 vel) {
 	float DF = 0.0;
 	float a = 0.0;
 
@@ -61,23 +61,35 @@ float getFuckingCoordinates(vec2 pos, vec2 vel) {
 
 void main() {
 	vert.uv = uv;
-	// wie wach is das eig
 	vert.position_world = vec4(modelMatrix * vec4(position, 1)).xyz;
-
 	gl_Position = viewProjMatrix * modelMatrix * vec4(position, 1.0);
+	vert.normal_world = normalMatrix * normal;
 
 	// SNOISEEE
 	vec2 pos = vec2(vert.position_world.x / 10, vert.position_world.z / 10);
 	vec2 vel = vec2(u_time*.1);
-	float pos_z = getFuckingCoordinates(pos, vel);
+	float pos_z = getZ(pos, vel);
 
 	gl_Position *= vec4(1.0, -1 * pos_z + 2.0, 1.0, 1.0);
 
-	// calulcate neighbours
+	// FINITE DIFFERENCE METHOD
+	/* vec3 off = vec3(2.0, 2.0, 0.0);
+	float hL = getZ(gl_Position.xy - off.xz, vel);
+	float hR = getZ(gl_Position.xy + off.xz, vel);
+	float hD = getZ(gl_Position.xy - off.zy, vel);
+	float hU = getZ(gl_Position.xy + off.zy, vel);
+
+	// deduce terrain normal
+	vec3 N = vec3(hL - hR, hD - hU, 2.0);
+	N = normalize(N);
+	vert.normal_world = N * normalMatrix; */
+
+	// CALCULATE 2 ADJACENT VERTICES
+	/* // calulcate neighbours
 	vec2 neighbour1 = vec2(vert.position_world.x + 1 / 10, vert.position_world.z / 10);
-	float neighbour1_z = getFuckingCoordinates(neighbour1, vel);
+	float neighbour1_z = getZ(neighbour1, vel);
 	vec2 neighbour2 = vec2(vert.position_world.x / 10, vert.position_world.z + 1 / 10);
-	float neighbour2_z = getFuckingCoordinates(neighbour2, vel);
+	float neighbour2_z = getZ(neighbour2, vel);
 
 	//UPDATE NORMALS
 	vec3 tangent = vec3(vert.position_world.x + 1, neighbour1_z, vert.position_world.z) - vec3(vert.position_world.x, pos_z, vert.position_world.z);
@@ -85,5 +97,23 @@ void main() {
 	
 	vec3 newNormal = cross(tangent, bitangent);
 
-	vert.normal_world = normalMatrix * newNormal;
+	vert.normal_world = newNormal * normalMatrix; */
+
+
+	// CALCULATE NORMALS OF ALL ADJACENT TRIANGLES
+	// ▲
+	//▲ ▲
+	float step = 1.0f / 10.0f;
+	float Zup = getZ(vec2(pos.x, pos.y + step), vel);
+	float Zupright = getZ(vec2(pos.x + step, pos.y + step), vel);
+	float Zright = getZ(vec2(pos.x  + step, pos.y), vel);
+	float Zdown = getZ(vec2(pos.x, pos.y - step), vel);
+	float Zdownleft = getZ(vec2(pos.x - step, pos.y - step), vel);
+	float Zleft = getZ(vec2(pos.x - step, pos.y), vel);
+
+	vec3 N = vec3(( 2 * (Zleft - Zright) - Zupright + Zdownleft + Zup - Zdown) / step,
+			( 2 * (Zdown - Zup) + Zupright + Zdownleft - Zup - Zleft) / step,
+			6);
+
+	vert.normal_world = normalize(N * normalMatrix);
 }

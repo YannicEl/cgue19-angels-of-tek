@@ -166,7 +166,7 @@ int main()
 	// generate Materials
 	Material cubePhongMaterial(&basicShader, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
 	Material cubePhongMaterial2(&basicShader, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
-	Material polaneswalkerMaterial(&planesWalker, glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.3f, 0.3f, 0.1f), 2.0f);
+	Material polaneswalkerMaterial(&planesWalker, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.1f, 0.7f, 0.1f), 3.0f);
 	Material himmerlblauMaterial(&himmerlblau, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
 	
 	// generate lanes
@@ -180,6 +180,7 @@ int main()
 	const int width = 100;
 	const int height = 8000;
 	Geometry plane = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-0.5 * (width - 1), -1, -200)), Geometry::createPlaneGeometry(width, height), &polaneswalkerMaterial);
+	//Geometry plane = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(0, -1, -3)), Geometry::createCubeGeometry(1.0f, 1.0f, 1.0f), &polaneswalkerMaterial);
 	Geometry sky = Geometry(glm::translate(glm::mat4(1.0f), glm::vec3(-0.5 * (width - 1), 5, -200)), Geometry::createPlaneGeometry(width, height), &himmerlblauMaterial);
 
 	// moving cube
@@ -204,7 +205,7 @@ int main()
 	GLuint laneTexture= loadTexture("assets/textures/lane.png");
 
 	// Initialize lights
-	DirectionalLight dirL(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0, -1, 0));
+	DirectionalLight dirL(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0, -0.5f, -1));
 	PointLight pointL(glm::vec3(1.0f), glm::vec3(0, -10, 0), glm::vec3(1, 0.4, 0.1));
 
 	// start sound engine
@@ -309,7 +310,6 @@ int main()
 		basicShader.use();
 		setPerFrameUniforms(&basicShader, camera);
 
-
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, albedoGranite);
 		glActiveTexture(GL_TEXTURE1);
@@ -413,6 +413,7 @@ int main()
 		lane4.draw();
 		lane5.draw();
 
+		// ich mag plkanes
 		planesWalker.use();
 		setPerFrameUniforms(&planesWalker, camera);
 		planesWalker.setFloat("u_time", glfwGetTime());
@@ -423,6 +424,8 @@ int main()
 		planesWalker.setVec3("pointL.color", pointL.color);
 		planesWalker.setVec3("pointL.position", pointL.position);
 		planesWalker.setVec3("pointL.attenuation", pointL.attenuation);
+
+		plane.draw();
 
 		//GLfloat heightMap[width * height] = {};
 		//for (int row = 0; row < height; row++) {
@@ -447,8 +450,6 @@ int main()
 		//		heightMap[realPos] = pos_z;
 		//	}
 		//}
-
-		plane.draw();
 
 		himmerlblau.use();
 		setPerFrameUniforms(&himmerlblau, camera);
