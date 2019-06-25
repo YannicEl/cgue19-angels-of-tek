@@ -11,6 +11,7 @@ layout(location = 1) in vec3 normal;
 out VertexData {
 	vec3 position_world;
 	vec3 normal_world;
+	vec2 uv;
 } vert;
 
 uniform mat4 modelMatrix;
