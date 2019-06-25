@@ -8,6 +8,7 @@
 in VertexData {
 	vec3 position_world;
 	vec3 normal_world;
+	vec2 uv;
 } vert;
 
 out vec4 color;

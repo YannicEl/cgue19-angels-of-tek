@@ -65,8 +65,10 @@ void main() {
 	gl_Position = viewProjMatrix * modelMatrix * vec4(position, 1.0);
 	vert.normal_world = normalMatrix * normal;
 
+	float resolution = 10.0f;
+
 	// SNOISEEE
-	vec2 pos = vec2(vert.position_world.x / 10, vert.position_world.z / 10);
+	vec2 pos = vec2(vert.position_world.x / resolution, vert.position_world.z / resolution);
 	vec2 vel = vec2(u_time*.1);
 	float pos_z = getZ(pos, vel);
 
@@ -103,7 +105,7 @@ void main() {
 	// CALCULATE NORMALS OF ALL ADJACENT TRIANGLES
 	// ▲
 	//▲ ▲
-	float step = 1.0f / 10.0f;
+	float step = 1.0f / resolution;
 	float Zup = getZ(vec2(pos.x, pos.y + step), vel);
 	float Zupright = getZ(vec2(pos.x + step, pos.y + step), vel);
 	float Zright = getZ(vec2(pos.x  + step, pos.y), vel);

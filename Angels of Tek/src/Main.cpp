@@ -166,7 +166,7 @@ int main()
 	// generate Materials
 	Material cubePhongMaterial(&basicShader, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
 	Material cubePhongMaterial2(&basicShader, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
-	Material polaneswalkerMaterial(&planesWalker, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.1f, 0.7f, 0.1f), 3.0f);
+	Material polaneswalkerMaterial(&planesWalker, glm::vec3(0.6f, 0.1f, 0.4f), glm::vec3(0.1f, 0.7f, 0.1f), 3.0f);
 	Material himmerlblauMaterial(&himmerlblau, glm::vec3(0.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.7f, 0.1f), 2.0f);
 	
 	// generate lanes
@@ -210,7 +210,7 @@ int main()
 
 	// start sound engine
 	irrklang::ISoundEngine* engine = irrklang::createIrrKlangDevice();
-	//engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
+	engine->play2D("assets/geile mukke ballern/Helblinde - Gateway to Psycho.mp3");
 	//engine->play2D("assets/geile mukke ballern/LMFAO - Party Rock Anthem.mp3");
 
 	// render loop
