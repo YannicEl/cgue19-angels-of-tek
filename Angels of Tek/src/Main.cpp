@@ -43,7 +43,7 @@ float movingObjPos = 0.5f;
 int temp = 1;
 glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 bool pause = true;
-int life = 96;
+int life = 196;
 glm::vec3 skyBlue = glm::vec3(0.0f, 0.4f, 0.6f);
 glm::vec3 skyRed = glm::vec3(0.8f, 0.0f, 0.1f);
 glm::vec3 skyGreen = glm::vec3(0.0f, 0.8f, 0.1f);
@@ -239,9 +239,10 @@ int main()
 		if (framesSinceLastDamage > 50)
 			framesSinceLastDamage = 50;
 
-		if (level.collision(camera)){
-			life--;
+		// Damage is now calculated with deltatime => framerate independent
+		life -= level.collision(camera, deltaTime);
 
+		if (level.collision(camera, deltaTime) > 0){
 			if (framesSinceLastDamage > 1)
 				engine->play2D("assets/geile mukke ballern/Minecraft Original Damage Sound.mp3");
 
@@ -252,7 +253,7 @@ int main()
 			level.coutner = 0;
 			camera.ProcessKeyboard(RESET, deltaTime);
 			pause = true;
-			life = 100;
+			life = 200;
 		}
 
 		glm::vec3 skyBlue = glm::vec3(0.0f, 0.4f, 0.6f);
@@ -610,7 +611,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		break;
 	case GLFW_KEY_R:
 		level.coutner = 0;
-		life = 96;
+		life = 196;
 		pause = true;
 		room = false;
 		camera.ProcessKeyboard(RESET, deltaTime);

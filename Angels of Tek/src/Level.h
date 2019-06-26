@@ -32,7 +32,8 @@ public:
 		//level1.push_back(glm::vec4(2, -19, 1, 4));
 	};
 
-	bool collision(Camera camera) {
+	// sophisticated collision detection algorithm
+	double collision(Camera camera, double delta) {
 		glm::vec4 obstacle = level1.at(coutner);
 
 		if (camera.Position.z < obstacle.y && coutner < level1.size() - 1)
@@ -40,10 +41,17 @@ public:
 
 		if (camera.line - 3 == obstacle.x) {
 			if (camera.Position.z - 1 > (obstacle.y - 0.5f) && camera.Position.z - 1 < (obstacle.y + 0.5f)) {
-				return true;
+				//std::cout << delta * 200 << std::endl;
+				if (delta * 200 == 0) {
+					return 1;
+				}
+				else {
+					return delta * 200;
+				}
+				
 			}
 		}
-		return false;
+		return 0;
 	}
 
 	bool win() {
